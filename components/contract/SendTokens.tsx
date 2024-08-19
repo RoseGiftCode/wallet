@@ -105,7 +105,7 @@ export const SendTokens = () => {
           value={destinationAddress}
           placeholder="vitalik.eth"
           onChange={(e) => setDestinationAddress(e.target.value)}
-          type={
+          status={
             addressAppearsValid
               ? 'success'
               : destinationAddress.length > 0
@@ -120,8 +120,6 @@ export const SendTokens = () => {
           crossOrigin={undefined}
           onPointerEnterCapture={() => {}}
           onPointerLeaveCapture={() => {}}
-  />
-          crossOrigin={undefined}
         />
         <Button
           type="secondary"
