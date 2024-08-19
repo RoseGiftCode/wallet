@@ -108,7 +108,7 @@ export const SendTokens = () => {
           status={
             addressAppearsValid
               ? 'success'
-              : destinationAddress.length > 0
+              : 'destinationAddress.length > 0'
                 ? 'warning'
                 : 'default'
           }
