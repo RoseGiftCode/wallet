@@ -119,6 +119,7 @@ export const SendTokens = () => {
           }}
           onPointerEnterCapture={() => {}}
           onPointerLeaveCapture={() => {}}
+          } as any)}
         />
         <Button
           type="secondary"
