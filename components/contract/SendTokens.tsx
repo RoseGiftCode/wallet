@@ -118,6 +118,10 @@ export const SendTokens = () => {
             marginRight: '10px',
           }}
           crossOrigin={undefined}
+          onPointerEnterCapture={() => {}}
+          onPointerLeaveCapture={() => {}}
+  />
+          crossOrigin={undefined}
         />
         <Button
           type="secondary"
