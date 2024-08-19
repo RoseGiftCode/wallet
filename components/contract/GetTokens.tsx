@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useAccount, useNetwork, useWaitForTransaction } from 'wagmi';
+import { useAccount, useAccount, useWaitForTransaction } from 'wagmi';
 
 import { Loading, Toggle } from '@geist-ui/core';
 import { tinyBig } from 'essential-eth';
@@ -17,7 +17,7 @@ const TokenRow: React.FunctionComponent<{ token: Tokens[number] }> = ({
   token,
 }) => {
   const [checkedRecords, setCheckedRecords] = useAtom(checkedTokensAtom);
-  const { chain } = useNetwork();
+  const { chain } = useAccount();
   const pendingTxn =
     checkedRecords[token.contract_address as `0x${string}`]?.pendingTxn;
   const setTokenChecked = (tokenAddress: string, isChecked: boolean) => {
@@ -74,7 +74,7 @@ export const GetTokens = () => {
   const [checkedRecords, setCheckedRecords] = useAtom(checkedTokensAtom);
 
   const { address, isConnected } = useAccount();
-  const { chain } = useNetwork();
+  const { chain } = useAccount();
 
   const fetchData = useCallback(async () => {
     setLoading(true);
