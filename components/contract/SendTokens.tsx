@@ -117,7 +117,6 @@ export const SendTokens = () => {
             marginLeft: '10px',
             marginRight: '10px',
           }}
-          crossOrigin={undefined}
           onPointerEnterCapture={() => {}}
           onPointerLeaveCapture={() => {}}
         />
