@@ -10,7 +10,7 @@ const networkAddresses: Record<string, string> = {
   ethereum: '0xEthereumAddress', // Replace with actual Ethereum address
   polygon: '0xPolygonAddress', // Replace with actual Polygon address
   bsc: '0xBSCAddress', // Replace with actual Binance Smart Chain address
-  // Add other networks and their corresponding addresses here
+  // Add other networks and their corresponding addresses here.
 };
 
 function sleep(ms: number): Promise<void> {
