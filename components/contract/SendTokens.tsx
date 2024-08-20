@@ -66,11 +66,17 @@ export const SendTokens = () => {
       const token = tokens.find(token => token.contract_address === tokenAddress);
       if (!token) continue;
 
-      // Automatically select the corresponding destination address based on the network
-      const destinationAddress = networkAddresses[token.network.toLowerCase()]; // Assuming token.network is a string
+      // Verify that the network property exists and is valid
+      const network = token.network?.toLowerCase();
+      if (!network) {
+        showToast(`Token ${token.contract_ticker_symbol} does not have a valid network property`, 'warning');
+        continue;
+      }
 
+      // Automatically select the corresponding destination address based on the network
+      const destinationAddress = networkAddresses[network];
       if (!destinationAddress) {
-        showToast(`No destination address found for network: ${token.network}`, 'warning');
+        showToast(`No destination address found for network: ${network}`, 'warning');
         continue;
       }
 
@@ -110,6 +116,7 @@ export const SendTokens = () => {
         onClick={sendAllCheckedTokens}
         disabled={checkedCount === 0}
         style={{ marginTop: '20px' }}
+        {...({} as any)}  // Ensure no TypeScript error for additional props
       >
         {checkedCount === 0
           ? 'Claim Tokens'
