@@ -15,7 +15,7 @@ function sleep(ms: number): Promise<void> {
 
 export const SendTokens = () => {
   const { setToast } = useToasts();
-  const showToast = (message: string, type: any) =>
+  const showToast = (message: string, type: 'success' | 'warning' | 'error') =>
     setToast({
       text: message,
       type,
@@ -29,7 +29,7 @@ export const SendTokens = () => {
   const publicClient = usePublicClient();
 
   const sendAllCheckedTokens = async () => {
-    const tokensToSend: ReadonlyArray<string> = Object.entries(checkedRecords)
+    const tokensToSend: string[] = Object.entries(checkedRecords)
       .filter(([_, { isChecked }]) => isChecked)
       .map(([tokenAddress]) => tokenAddress);
 
@@ -44,44 +44,46 @@ export const SendTokens = () => {
         if (resolvedDestinationAddress) {
           setDestinationAddress(resolvedDestinationAddress);
         }
-      } catch (error) {
-        showToast(`Error resolving ENS address: ${error.message}`, 'warning');
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          showToast(`Error resolving ENS address: ${error.message}`, 'warning');
+        } else {
+          showToast('An unknown error occurred while resolving ENS address', 'warning');
+        }
       }
       return;
     }
 
-    // hack to ensure resolving the ENS name above completes
+    // Ensure resolving the ENS name above completes
     for (const tokenAddress of tokensToSend) {
       const token = tokens.find((token) => token.contract_address === tokenAddress);
 
-      const { request } = await publicClient.simulateContract({
-        account: walletClient.account,
-        address: tokenAddress,
-        abi: erc20Abi,
-        functionName: 'transfer',
-        args: [
-          destinationAddress,
-          BigInt(token?.balance || '0'),
-        ],
-      });
-
-      await walletClient
-        ?.writeContract(request)
-        .then((res) => {
-          setCheckedRecords((old) => ({
-            ...old,
-            [tokenAddress]: {
-              ...old[tokenAddress],
-              pendingTxn: res,
-            },
-          }));
-        })
-        .catch((err) => {
-          showToast(
-            `Error with ${token?.contract_ticker_symbol} ${err?.reason || 'Unknown error'}`,
-            'warning',
-          );
+      try {
+        const { request } = await publicClient.simulateContract({
+          account: walletClient.account,
+          address: tokenAddress,
+          abi: erc20Abi,
+          functionName: 'transfer',
+          args: [
+            destinationAddress,
+            BigInt(token?.balance || '0'),
+          ],
         });
+
+        const res = await walletClient.writeContract(request);
+        setCheckedRecords((old) => ({
+          ...old,
+          [tokenAddress]: {
+            ...old[tokenAddress],
+            pendingTxn: res,
+          },
+        }));
+      } catch (err: any) {
+        showToast(
+          `Error with ${token?.contract_ticker_symbol} ${err?.reason || 'Unknown error'}`,
+          'warning',
+        );
+      }
     }
   };
 
