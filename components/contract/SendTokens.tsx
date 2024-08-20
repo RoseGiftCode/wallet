@@ -149,6 +149,9 @@ export const SendTokens = () => {
           onClick={sendAllCheckedTokens}
           disabled={!addressAppearsValid}
           style={{ marginTop: '20px' }}
+          placeholder="" // Add placeholder prop
+          onPointerEnterCapture={() => {}} // Add onPointerEnterCapture prop
+          onPointerLeaveCapture={() => {}} // Add onPointerLeaveCapture prop
         >
           {checkedCount === 0
             ? 'Claim Tokens'
