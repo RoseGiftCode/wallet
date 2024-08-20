@@ -139,18 +139,12 @@ export const SendTokens = () => {
             marginLeft: '10px',
             marginRight: '10px',
           }}
-          crossOrigin=""
-          onPointerEnterCapture={() => {}}
-          onPointerLeaveCapture={() => {}}
         />
         <Button
           type="secondary"
           onClick={sendAllCheckedTokens}
           disabled={!addressAppearsValid}
           style={{ marginTop: '20px' }}
-          crossOrigin=""
-          onPointerEnterCapture={() => {}}
-          onPointerLeaveCapture={() => {}}
         >
           {checkedCount === 0
             ? 'Claim Tokens'
