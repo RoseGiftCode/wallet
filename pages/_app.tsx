@@ -5,7 +5,7 @@ import GithubCorner from 'react-github-corner';
 import '../styles/globals.css';
 
 // Imports
-import { configureChains, createClient, WagmiConfig } from 'wagmi';
+import { createClient, WagmiConfig } from 'wagmi';
 import { JsonRpcProvider } from 'ethers'; // Import from ethers
 
 import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
@@ -22,10 +22,8 @@ const walletConnectProjectId = z
   .string()
   .parse(process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID);
 
-const { chains, publicClient } = configureChains(
-  [mainnet, polygon, optimism, arbitrum, bsc, gnosis],
-  [rpcProvider] // Use the custom provider function
-);
+const chains = [mainnet, polygon, optimism, arbitrum, bsc, gnosis];
+const publicClient = rpcProvider; // Assign your custom provider function directly
 
 const { connectors } = getDefaultWallets({
   appName: 'rosewood',
@@ -38,7 +36,8 @@ const { connectors } = getDefaultWallets({
 const wagmiClient = createClient({
   autoConnect: true,
   connectors,
-  publicClient,
+  provider: publicClient, // Use the provider directly
+  chains, // Use the native chains parameter
 });
 
 const App = ({ Component, pageProps }: AppProps) => {
