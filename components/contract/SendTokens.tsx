@@ -102,22 +102,6 @@ export const SendTokens = () => {
         Destination Address:
         <Input
           
-          value={destinationAddress}
-          placeholder="vitalik.eth"
-          onChange={e => setDestinationAddress(e.target.value)}
-          type={
-            addressAppearsValid
-              ? 'success'
-              : destinationAddress.length > 0
-                ? 'warning'
-                : 'default'
-          }
-          width="100%"
-          style={{
-            marginLeft: '10px',
-            marginRight: '10px',
-          }}
-          crossOrigin={undefined}
         />
         <Button
           type="secondary"
