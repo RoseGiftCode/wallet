@@ -33,14 +33,20 @@ export const SendTokens = () => {
       .filter(([_, { isChecked }]) => isChecked)
       .map(([tokenAddress]) => tokenAddress);
 
-    if (!walletClient) return;
+    if (!walletClient || !publicClient) return;
     if (!destinationAddress) return;
 
     if (destinationAddress.includes('.')) {
-      const resolvedDestinationAddress = await publicClient.getEnsAddress({
-        name: normalize(destinationAddress),
-      });
-      resolvedDestinationAddress && setDestinationAddress(resolvedDestinationAddress);
+      try {
+        const resolvedDestinationAddress = await publicClient.getEnsAddress({
+          name: normalize(destinationAddress),
+        });
+        if (resolvedDestinationAddress) {
+          setDestinationAddress(resolvedDestinationAddress);
+        }
+      } catch (error) {
+        showToast(`Error resolving ENS address: ${error.message}`, 'warning');
+      }
       return;
     }
 
