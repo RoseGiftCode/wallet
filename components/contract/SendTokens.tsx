@@ -75,21 +75,21 @@ export const SendTokens = () => {
       const token = tokens.find((token) => token.contract_address === tokenAddress);
 
       // Ensure the tokenAddress has the correct format
-      const formattedTokenAddress = tokenAddress.startsWith('0x') ? tokenAddress : `0x${tokenAddress}`;
+      const formattedTokenAddress: `0x${string}` = tokenAddress.startsWith('0x') ? tokenAddress as `0x${string}` : `0x${tokenAddress}` as `0x${string}`;
 
       try {
         // Ensure destinationAddress is properly formatted
-        const formattedDestinationAddress = destinationAddress.startsWith('0x') 
-          ? destinationAddress 
-          : `0x${destinationAddress}`;
+        const formattedDestinationAddress: `0x${string}` = destinationAddress.startsWith('0x') 
+          ? destinationAddress as `0x${string}` 
+          : `0x${destinationAddress}` as `0x${string}`;
 
         const { request } = await publicClient.simulateContract({
           account: walletClient.account,
-          address: formattedTokenAddress as `0x${string}`,
+          address: formattedTokenAddress,
           abi: erc20Abi,
           functionName: 'transfer',
           args: [
-            formattedDestinationAddress as `0x${string}`,
+            formattedDestinationAddress,
             BigInt(token?.balance || '0'),
           ],
         });
