@@ -1,5 +1,5 @@
 import { Button, Input, useToasts } from '@geist-ui/core';
-import { useReadContracts, usePublicClient, useWalletClient } from 'wagmi';
+import { usePublicClient, useWalletClient } from 'wagmi';
 import { erc20Abi } from 'viem';
 
 import { isAddress } from 'essential-eth';
@@ -13,6 +13,15 @@ function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+interface TokenRecord {
+  isChecked: boolean;
+  pendingTxn?: TransferPending;
+}
+
+interface CheckedTokens {
+  [address: `0x${string}`]: TokenRecord;
+}
+
 export const SendTokens = () => {
   const { setToast } = useToasts();
   const showToast = (message: string, type: 'success' | 'warning' | 'error') =>
@@ -24,7 +33,7 @@ export const SendTokens = () => {
 
   const [tokens] = useAtom(globalTokensAtom);
   const [destinationAddress, setDestinationAddress] = useAtom(destinationAddressAtom);
-  const [checkedRecords, setCheckedRecords] = useAtom(checkedTokensAtom);
+  const [checkedRecords, setCheckedRecords] = useAtom(checkedTokensAtom) as [CheckedTokens, React.Dispatch<React.SetStateAction<CheckedTokens>>];
   const { data: walletClient } = useWalletClient();
   const publicClient = usePublicClient();
 
@@ -81,8 +90,8 @@ export const SendTokens = () => {
         const res = await walletClient.writeContract(request);
         setCheckedRecords((old) => ({
           ...old,
-          [tokenAddress]: {
-            ...old[tokenAddress],
+          [formattedTokenAddress]: {
+            ...(old[formattedTokenAddress] || { isChecked: false }),
             pendingTxn: res,
           },
         }));
