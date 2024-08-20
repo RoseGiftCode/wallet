@@ -91,7 +91,7 @@ export const SendTokens = () => {
             value={destinationAddress}
             placeholder="vitalik.eth"
             onChange={(e) => setDestinationAddress(e.target.value)}
-            status={
+            type={
               addressAppearsValid
                 ? 'success'
                 : destinationAddress.length > 0
