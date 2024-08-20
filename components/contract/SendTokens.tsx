@@ -139,7 +139,7 @@ export const SendTokens = () => {
             marginLeft: '10px',
             marginRight: '10px',
           }}
-          crossOrigin={undefined}
+          // crossOrigin is not a standard prop for Input, removing it.
         />
         <Button
           type="secondary"
