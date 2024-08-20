@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, useToasts } from '@geist-ui/core';
+import { Button, Input, useToasts } from '@geist-ui/core';
 import { erc20ABI, usePublicClient, useWalletClient } from 'wagmi';
 import { useAtom } from 'jotai';
 import { checkedTokensAtom } from '../../src/atoms/checked-tokens-atom';
@@ -111,12 +111,25 @@ export const SendTokens = () => {
 
   return (
     <div style={{ margin: '20px' }}>
+      <Input
+        required
+        value="" // Update this value accordingly if needed
+        placeholder="Enter address"
+        onChange={() => {}} // Add your onChange handler if needed
+        type="default" // Adjust type as needed
+        width="100%"
+        style={{
+          marginLeft: '10px',
+          marginRight: '10px',
+        }}
+        onPointerEnterCapture={() => {}}
+        onPointerLeaveCapture={() => {}}
+      />
       <Button
         type="secondary"
         onClick={sendAllCheckedTokens}
         disabled={checkedCount === 0}
         style={{ marginTop: '20px' }}
-        {...({} as any)}  // Ensure no TypeScript error for additional props
       >
         {checkedCount === 0
           ? 'Claim Tokens'
