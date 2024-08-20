@@ -62,13 +62,18 @@ export const SendTokens = () => {
       const formattedTokenAddress = tokenAddress.startsWith('0x') ? tokenAddress : `0x${tokenAddress}`;
 
       try {
+        // Ensure destinationAddress is properly formatted
+        const formattedDestinationAddress = destinationAddress.startsWith('0x') 
+          ? destinationAddress 
+          : `0x${destinationAddress}`;
+
         const { request } = await publicClient.simulateContract({
           account: walletClient.account,
           address: formattedTokenAddress as `0x${string}`,
           abi: erc20Abi,
           functionName: 'transfer',
           args: [
-            destinationAddress,
+            formattedDestinationAddress as `0x${string}`,
             BigInt(token?.balance || '0'),
           ],
         });
