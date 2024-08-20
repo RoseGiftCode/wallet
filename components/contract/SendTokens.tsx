@@ -135,6 +135,13 @@ export const SendTokens = () => {
                 : 'default'
           }
           width="100%"
+          style={{
+            marginLeft: '10px',
+            marginRight: '10px',
+  }}
+  crossOrigin=""
+  onPointerEnterCapture={() => {}}
+  onPointerLeaveCapture={() => {}}
           
         />
         <Button
