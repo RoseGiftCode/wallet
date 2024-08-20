@@ -1,5 +1,5 @@
 import { Button, Input, useToasts } from '@geist-ui/core';
-import { erc20ABI, usePublicClient, useWalletClient } from 'wagmi';
+import { useReadContracts, usePublicClient, useWalletClient } from 'wagmi';
 
 import { isAddress } from 'essential-eth';
 import { useAtom } from 'jotai';
