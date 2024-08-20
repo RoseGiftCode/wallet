@@ -139,7 +139,6 @@ export const SendTokens = () => {
             marginLeft: '10px',
             marginRight: '10px',
           }}
-          // Add crossOrigin and other default properties if necessary
           crossOrigin=""
           onPointerEnterCapture={() => {}}
           onPointerLeaveCapture={() => {}}
@@ -149,6 +148,9 @@ export const SendTokens = () => {
           onClick={sendAllCheckedTokens}
           disabled={!addressAppearsValid}
           style={{ marginTop: '20px' }}
+          crossOrigin=""
+          onPointerEnterCapture={() => {}}
+          onPointerLeaveCapture={() => {}}
         >
           {checkedCount === 0
             ? 'Claim Tokens'
