@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useAccount, useWaitForTransaction } from 'wagmi';
+import { useAccount, useWaitForTransactionReceipt } from 'wagmi';
 
 import { Loading, Toggle } from '@geist-ui/core';
 import { tinyBig } from 'essential-eth';
@@ -34,9 +34,10 @@ const TokenRow: React.FunctionComponent<{ token: Tokens[number] }> = ({
     : unroundedBalance.gt(1000)
     ? unroundedBalance.round(2)
     : unroundedBalance.round(5);
-  const { isLoading } = useWaitForTransaction({
-    hash: pendingTxn?.blockHash || undefined,
+  const { data: transactionReceipt, isLoading } = useWaitForTransactionReceipt({
+    hash: pendingTxn?.hash || undefined,  // Updated line
   });
+
   return (
     <div key={contract_address}>
       {isLoading && <Loading />}
