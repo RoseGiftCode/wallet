@@ -13,6 +13,13 @@ function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+// Define TransferPending type
+type TransferPending = {
+  id: string;
+  status: string;
+  // Add other properties as needed
+};
+
 interface TokenRecord {
   isChecked: boolean;
   pendingTxn?: TransferPending;
