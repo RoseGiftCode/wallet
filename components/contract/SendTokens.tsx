@@ -28,7 +28,7 @@ export const SendTokens = () => {
   const { data: walletClient } = useWalletClient();
   const publicClient = usePublicClient();
   const sendAllCheckedTokens = async () => {
-    const tokensToSend: ReadonlyArray<0x${string}> = Object.entries(
+    const tokensToSend: ReadonlyArray<string> = Object.entries(
       checkedRecords,
     )
       .filter(([tokenAddress, { isChecked }]) => isChecked)
