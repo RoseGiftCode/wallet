@@ -104,7 +104,7 @@ export const SendTokens = () => {
           required
           value={destinationAddress}
           placeholder="vitalik.eth"
-          onChange={(e) => setDestinationAddress(e.target.value)}
+          onChange={e => setDestinationAddress(e.target.value)}
           type={
             addressAppearsValid
               ? 'success'
