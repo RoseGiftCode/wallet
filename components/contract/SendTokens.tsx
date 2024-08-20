@@ -139,7 +139,10 @@ export const SendTokens = () => {
             marginLeft: '10px',
             marginRight: '10px',
           }}
-          // crossOrigin is not a standard prop for Input, removing it.
+          // Add crossOrigin and other default properties if necessary
+          crossOrigin=""
+          onPointerEnterCapture={() => {}}
+          onPointerLeaveCapture={() => {}}
         />
         <Button
           type="secondary"
