@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useAccount, useNetwork, useWaitForTransaction } from 'wagmi';
+import { useAccount, useWaitForTransactionReceipt } from 'wagmi';
 
 import { Loading, Toggle } from '@geist-ui/core';
 import { tinyBig } from 'essential-eth';
@@ -17,7 +17,7 @@ const TokenRow: React.FunctionComponent<{ token: Tokens[number] }> = ({
   token,
 }) => {
   const [checkedRecords, setCheckedRecords] = useAtom(checkedTokensAtom);
-  const { chain } = useNetwork();
+  const { chain } = useAccount();  // Use chain from useAccount
   const pendingTxn =
     checkedRecords[token.contract_address as `0x${string}`]?.pendingTxn;
   const setTokenChecked = (tokenAddress: string, isChecked: boolean) => {
@@ -34,7 +34,7 @@ const TokenRow: React.FunctionComponent<{ token: Tokens[number] }> = ({
     : unroundedBalance.gt(1000)
     ? unroundedBalance.round(2)
     : unroundedBalance.round(5);
-  const { isLoading } = useWaitForTransaction({
+  const { isLoading } = useWaitForTransactionReceipt({
     hash: pendingTxn?.blockHash || undefined,
   });
   return (
@@ -73,15 +73,14 @@ export const GetTokens = () => {
   const [error, setError] = useState('');
   const [checkedRecords, setCheckedRecords] = useAtom(checkedTokensAtom);
 
-  const { address, isConnected } = useAccount();
-  const { chain } = useNetwork();
+  const { address, isConnected, chain } = useAccount(); // Get chain from useAccount
 
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
       setError('');
       const newTokens = await httpFetchTokens(
-        chain?.id as number,
+        chain?.id as number, // Use chain ID from useAccount
         address as string,
       );
       setTokens((newTokens as any).data.erc20s);
@@ -115,7 +114,7 @@ export const GetTokens = () => {
 
   return (
     <div style={{ margin: '20px' }}>
-      {isConnected && tokens?.length === 0 && `No tokens on ${chain?.name}`}
+      {isConnected && tokens?.length === 0 && `No tokens on ${chain?.name}`} {/* Use chain name */}
       {tokens.map((token) => (
         <TokenRow token={token} key={token.contract_address} />
       ))}
