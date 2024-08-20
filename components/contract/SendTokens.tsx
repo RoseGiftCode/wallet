@@ -12,6 +12,7 @@ import { globalTokensAtom } from '../../src/atoms/global-tokens-atom';
 function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
 export const SendTokens = () => {
   const { setToast } = useToasts();
   const showToast = (message: string, type: any) =>
@@ -20,51 +21,40 @@ export const SendTokens = () => {
       type,
       delay: 4000,
     });
+
   const [tokens] = useAtom(globalTokensAtom);
-  const [destinationAddress, setDestinationAddress] = useAtom(
-    destinationAddressAtom,
-  );
+  const [destinationAddress, setDestinationAddress] = useAtom(destinationAddressAtom);
   const [checkedRecords, setCheckedRecords] = useAtom(checkedTokensAtom);
   const { data: walletClient } = useWalletClient();
   const publicClient = usePublicClient();
+
   const sendAllCheckedTokens = async () => {
-    const tokensToSend: ReadonlyArray<string> = Object.entries(
-      checkedRecords,
-    )
-      .filter(([tokenAddress, { isChecked }]) => isChecked)
-      .map(([tokenAddress]) => tokenAddress as 0x${string});
+    const tokensToSend: ReadonlyArray<string> = Object.entries(checkedRecords)
+      .filter(([_, { isChecked }]) => isChecked)
+      .map(([tokenAddress]) => tokenAddress);
 
     if (!walletClient) return;
     if (!destinationAddress) return;
+
     if (destinationAddress.includes('.')) {
       const resolvedDestinationAddress = await publicClient.getEnsAddress({
         name: normalize(destinationAddress),
       });
-      resolvedDestinationAddress &&
-        setDestinationAddress(resolvedDestinationAddress);
+      resolvedDestinationAddress && setDestinationAddress(resolvedDestinationAddress);
       return;
     }
+
     // hack to ensure resolving the ENS name above completes
     for (const tokenAddress of tokensToSend) {
-      // const erc20Contract = getContract({
-      //   address: tokenAddress,
-      //   abi: erc20ABI,
-      //   client: { wallet: walletClient },
-      // });
-      // const transferFunction = erc20Contract.write.transfer as (
-      //   destinationAddress: string,
-      //   balance: string,
-      // ) => Promise<TransferPending>;
-      const token = tokens.find(
-        (token) => token.contract_address === tokenAddress,
-      );
+      const token = tokens.find((token) => token.contract_address === tokenAddress);
+
       const { request } = await publicClient.simulateContract({
         account: walletClient.account,
         address: tokenAddress,
-        abi: erc20ABI,
+        abi: erc20Abi,
         functionName: 'transfer',
         args: [
-          destinationAddress as 0x${string},
+          destinationAddress,
           BigInt(token?.balance || '0'),
         ],
       });
@@ -82,9 +72,7 @@ export const SendTokens = () => {
         })
         .catch((err) => {
           showToast(
-            Error with ${token?.contract_ticker_symbol} ${
-              err?.reason || 'Unknown error'
-            },
+            `Error with ${token?.contract_ticker_symbol} ${err?.reason || 'Unknown error'}`,
             'warning',
           );
         });
@@ -93,10 +81,11 @@ export const SendTokens = () => {
 
   const addressAppearsValid: boolean =
     typeof destinationAddress === 'string' &&
-    (destinationAddress?.includes('.') || isAddress(destinationAddress));
+    (destinationAddress.includes('.') || isAddress(destinationAddress));
   const checkedCount = Object.values(checkedRecords).filter(
     (record) => record.isChecked,
   ).length;
+
   return (
     <div style={{ margin: '20px' }}>
       <form>
@@ -105,7 +94,7 @@ export const SendTokens = () => {
           required
           value={destinationAddress}
           placeholder="vitalik.eth"
-          onChange={e => setDestinationAddress(e.target.value)}
+          onChange={(e) => setDestinationAddress(e.target.value)}
           type={
             addressAppearsValid
               ? 'success'
@@ -128,9 +117,9 @@ export const SendTokens = () => {
         >
           {checkedCount === 0
             ? 'Claim Tokens'
-            : Claim ${checkedCount} Tokens Now}
+            : `Claim ${checkedCount} Tokens Now`}
         </Button>
       </form>
     </div>
   );
-}; 
+};
