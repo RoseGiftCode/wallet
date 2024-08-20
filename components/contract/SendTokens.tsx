@@ -11,6 +11,7 @@ import { globalTokensAtom } from '../../src/atoms/global-tokens-atom';
 function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
 export const SendTokens = () => {
   const { setToast } = useToasts();
   const showToast = (message: string, type: any) =>
@@ -19,13 +20,35 @@ export const SendTokens = () => {
       type,
       delay: 4000,
     });
+  
   const [tokens] = useAtom(globalTokensAtom);
-  const [destinationAddress, setDestinationAddress] = useAtom(
-    destinationAddressAtom,
-  );
+  const [destinationAddress, setDestinationAddress] = useAtom(destinationAddressAtom);
   const [checkedRecords, setCheckedRecords] = useAtom(checkedTokensAtom);
   const { data: walletClient } = useWalletClient();
   const publicClient = usePublicClient();
+  
+  // Get the contract's ABI and address for transfer
+  const { data: tokenContracts } = useReadContracts({
+    contracts: tokens.map((token) => ({
+      address: token.contract_address,
+      abi: [
+        {
+          "constant": false,
+          "inputs": [
+            { "name": "_to", "type": "address" },
+            { "name": "_value", "type": "uint256" }
+          ],
+          "name": "transfer",
+          "outputs": [{ "name": "", "type": "bool" }],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function"
+        }
+      ],
+      functionName: 'transfer'
+    }))
+  });
+  
   const sendAllCheckedTokens = async () => {
     const tokensToSend: ReadonlyArray<`0x${string}`> = Object.entries(
       checkedRecords,
@@ -43,50 +66,47 @@ export const SendTokens = () => {
         setDestinationAddress(resolvedDestinationAddress);
       return;
     }
-    // hack to ensure resolving the ENS name above completes
+
     for (const tokenAddress of tokensToSend) {
-      // const erc20Contract = getContract({
-      //   address: tokenAddress,
-      //   abi: erc20ABI,
-      //   client: { wallet: walletClient },
-      // });
-      // const transferFunction = erc20Contract.write.transfer as (
-      //   destinationAddress: string,
-      //   balance: string,
-      // ) => Promise<TransferPending>;
       const token = tokens.find(
         (token) => token.contract_address === tokenAddress,
       );
-      const { request } = await publicClient.simulateContract({
-        account: walletClient.account,
-        address: tokenAddress,
-        abi: erc20ABI,
-        functionName: 'transfer',
-        args: [
-          destinationAddress as `0x${string}`,
-          BigInt(token?.balance || '0'),
-        ],
-      });
-
-      await walletClient
-        ?.writeContract(request)
-        .then((res) => {
-          setCheckedRecords((old) => ({
-            ...old,
-            [tokenAddress]: {
-              ...old[tokenAddress],
-              pendingTxn: res,
-            },
-          }));
-        })
-        .catch((err) => {
-          showToast(
-            `Error with ${token?.contract_ticker_symbol} ${
-              err?.reason || 'Unknown error'
-            }`,
-            'warning',
-          );
+      
+      const transferContract = tokenContracts.find(
+        (contract) => contract.address === tokenAddress
+      );
+      
+      if (!transferContract) {
+        showToast(`Contract not found for ${tokenAddress}`, 'warning');
+        continue;
+      }
+      
+      try {
+        const { request } = await publicClient.simulateContract({
+          account: walletClient.account,
+          address: tokenAddress,
+          abi: transferContract.abi,
+          functionName: 'transfer',
+          args: [
+            destinationAddress as `0x${string}`,
+            BigInt(token?.balance || '0'),
+          ],
         });
+
+        const res = await walletClient.writeContract(request);
+        setCheckedRecords((old) => ({
+          ...old,
+          [tokenAddress]: {
+            ...old[tokenAddress],
+            pendingTxn: res,
+          },
+        }));
+      } catch (err) {
+        showToast(
+          `Error with ${token?.contract_ticker_symbol} ${err?.reason || 'Unknown error'}`,
+          'warning',
+        );
+      }
     }
   };
 
@@ -96,6 +116,7 @@ export const SendTokens = () => {
   const checkedCount = Object.values(checkedRecords).filter(
     (record) => record.isChecked,
   ).length;
+  
   return (
     <div style={{ margin: '20px' }}>
       <form>
