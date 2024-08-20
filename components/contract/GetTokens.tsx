@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useAccount, useAccount, useWaitForTransaction } from 'wagmi';
+import { useAccount, useWaitForTransaction } from 'wagmi';
 
 import { Loading, Toggle } from '@geist-ui/core';
 import { tinyBig } from 'essential-eth';
