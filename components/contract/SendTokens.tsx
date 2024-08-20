@@ -58,10 +58,13 @@ export const SendTokens = () => {
     for (const tokenAddress of tokensToSend) {
       const token = tokens.find((token) => token.contract_address === tokenAddress);
 
+      // Ensure the tokenAddress has the correct format
+      const formattedTokenAddress = tokenAddress.startsWith('0x') ? tokenAddress : `0x${tokenAddress}`;
+
       try {
         const { request } = await publicClient.simulateContract({
           account: walletClient.account,
-          address: tokenAddress,
+          address: formattedTokenAddress as `0x${string}`,
           abi: erc20Abi,
           functionName: 'transfer',
           args: [
