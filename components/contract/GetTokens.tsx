@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useAccount, useWaitForTransactionReceipt } from 'wagmi';
+import { useAccount, useNetwork, useWaitForTransaction } from 'wagmi';
 
 import { Loading, Toggle } from '@geist-ui/core';
 import { tinyBig } from 'essential-eth';
@@ -17,7 +17,7 @@ const TokenRow: React.FunctionComponent<{ token: Tokens[number] }> = ({
   token,
 }) => {
   const [checkedRecords, setCheckedRecords] = useAtom(checkedTokensAtom);
-  const { chain } = useAccount();
+  const { chain } = useNetwork();
   const pendingTxn =
     checkedRecords[token.contract_address as `0x${string}`]?.pendingTxn;
   const setTokenChecked = (tokenAddress: string, isChecked: boolean) => {
@@ -34,10 +34,9 @@ const TokenRow: React.FunctionComponent<{ token: Tokens[number] }> = ({
     : unroundedBalance.gt(1000)
     ? unroundedBalance.round(2)
     : unroundedBalance.round(5);
-  const { data: transactionReceipt, isLoading } = useWaitForTransactionReceipt({
-    hash: pendingTxn?.hash || undefined,  // Updated line
+  const { isLoading } = useWaitForTransaction({
+    hash: pendingTxn?.blockHash || undefined,
   });
-
   return (
     <div key={contract_address}>
       {isLoading && <Loading />}
@@ -75,7 +74,7 @@ export const GetTokens = () => {
   const [checkedRecords, setCheckedRecords] = useAtom(checkedTokensAtom);
 
   const { address, isConnected } = useAccount();
-  const { chain } = useAccount();
+  const { chain } = useNetwork();
 
   const fetchData = useCallback(async () => {
     setLoading(true);
