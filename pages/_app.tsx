@@ -32,7 +32,7 @@ const { connectors } = getDefaultWallets({
 
 // Set up Wagmi Client
 const wagmiConfig = createConfig({
-  autoConnect: true,
+  reconnect: true,
   connectors,
   provider: () => new JsonRpcProvider(`https://mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_PROJECT_ID}`),
   chains, // Ensure chains are correctly typed
