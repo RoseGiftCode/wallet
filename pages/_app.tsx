@@ -14,9 +14,10 @@ import '@rainbow-me/rainbowkit/styles.css';
 import { mainnet, polygon, optimism, arbitrum, bsc, gnosis, nexilix, zkSync, classic, base } from '../chain'; // Correct path for chain.ts
 import { z } from 'zod';
 import { useIsMounted } from '../hooks';
+import { type Chain } from 'viem'; // Ensure Chain type is imported
 
 // Define chains
-const chains = [mainnet, polygon, optimism, arbitrum, bsc, gnosis, nexilix, zkSync, classic, base];
+const chains: readonly [Chain, ...Chain[]] = [mainnet, polygon, optimism, arbitrum, bsc, gnosis, nexilix, zkSync, classic, base];
 
 // WalletConnect project ID from environment variables
 const walletConnectProjectId = z
