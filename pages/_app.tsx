@@ -5,8 +5,8 @@ import GithubCorner from 'react-github-corner';
 import '../styles/globals.css';
 
 // Imports
-import { createConfig, WagmiProvider } from '@wagmi/core'; // Correct import for createConfig and WagmiProvider
-import { http, getClient, getConnectorClient } from '@wagmi/core'; // Import http, getClient, and getConnectorClient
+import { createConfig, WagmiProvider } from 'wagmi'; // Import from wagmi
+import { http, getClient, getConnectorClient } from '@wagmi/core'; // Import additional utilities
 import { JsonRpcProvider } from 'ethers'; // Import directly from ethers
 
 import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
@@ -30,25 +30,15 @@ const { connectors } = getDefaultWallets({
   projectId: walletConnectProjectId,
 });
 
-// Set up Wagmi Config
+// Set up Wagmi Client
 const wagmiConfig = createConfig({
+  autoConnect: true,
+  connectors,
+  provider: () => new JsonRpcProvider(`https://mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_PROJECT_ID}`),
   chains,
-  transports: {
-    [mainnet.id]: http(),
-    [polygon.id]: http(),
-    [optimism.id]: http(),
-    [arbitrum.id]: http(),
-    [bsc.id]: http(),
-    [gnosis.id]: http(),
-  },
 });
 
-// Extract a Viem Client for the current active chain
-const publicClient = getClient(wagmiConfig);
-
-// Extract a Viem Client for the current active chain & account
-const walletClient = getConnectorClient(wagmiConfig);
-
+// The App component
 const App = ({ Component, pageProps }: AppProps) => {
   const isMounted = useIsMounted();
 
@@ -61,7 +51,7 @@ const App = ({ Component, pageProps }: AppProps) => {
         bannerColor="#e056fd"
       />
 
-      <WagmiProvider config={wagmiConfig}> {/* Use WagmiProvider with config prop */}
+      <WagmiProvider config={wagmiConfig}> {/* Use WagmiProvider with the correct config */}
         <RainbowKitProvider coolMode chains={chains}>
           <NextHead>
             <title>Drain</title>
