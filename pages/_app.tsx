@@ -5,7 +5,7 @@ import GithubCorner from 'react-github-corner';
 import '../styles/globals.css';
 
 // Imports
-import { createClient, WagmiProvider } from 'wagmi'; // Updated import
+import { createConfig, WagmiProvider } from 'wagmi'; // Use createConfig
 import { JsonRpcProvider } from 'ethers'; // Import directly from ethers
 
 import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
@@ -30,9 +30,8 @@ const { connectors } = getDefaultWallets({
   projectId: walletConnectProjectId,
 });
 
-// Set up Wagmi Client
-const wagmiClient = createClient({
-  autoConnect: true, // Ensure you are using the latest API; this is just for example
+// Set up Wagmi Client configuration
+const wagmiConfig = createConfig({
   connectors,
   provider: () => new JsonRpcProvider(`https://mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_PROJECT_ID}`),
   chains,
@@ -52,7 +51,7 @@ const App = ({ Component, pageProps }: AppProps) => {
         bannerColor="#e056fd"
       />
 
-      <WagmiProvider client={wagmiClient}> {/* Use WagmiProvider with the correct client */}
+      <WagmiProvider config={wagmiConfig}> {/* Use WagmiProvider with the correct config */}
         <RainbowKitProvider coolMode chains={chains}>
           <NextHead>
             <title>Drain</title>
