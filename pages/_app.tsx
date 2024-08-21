@@ -5,7 +5,7 @@ import GithubCorner from 'react-github-corner';
 import '../styles/globals.css';
 
 // Imports
-import { createConfig, WagmiConfig, Chain } from 'wagmi'; // Import Chain type
+import { createClient, WagmiConfig } from 'wagmi'; // Use the correct function from wagmi
 import { JsonRpcProvider } from 'ethers'; // Import from ethers
 
 import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
@@ -22,8 +22,8 @@ const walletConnectProjectId = z
   .string()
   .parse(process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID);
 
-// Define chains with the Chain type
-const chains: Chain[] = [mainnet, polygon, optimism, arbitrum, bsc, gnosis];
+// Define chains
+const chains = [mainnet, polygon, optimism, arbitrum, bsc, gnosis];
 
 // Default Wallets Configuration
 const { connectors } = getDefaultWallets({
@@ -32,7 +32,7 @@ const { connectors } = getDefaultWallets({
 });
 
 // Configure Wagmi Client
-const wagmiClient = createConfig({
+const wagmiClient = createClient({
   autoConnect: true,
   connectors,
   provider: rpcProvider, // Adjust provider if needed
@@ -51,7 +51,7 @@ const App = ({ Component, pageProps }: AppProps) => {
         bannerColor="#e056fd"
       />
 
-      <WagmiConfig config={wagmiClient}>
+      <WagmiConfig client={wagmiClient}> {/* Use "client" prop */}
         <RainbowKitProvider coolMode chains={chains}>
           <NextHead>
             <title>Drain</title>
