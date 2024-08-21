@@ -28,7 +28,6 @@ const chains = [mainnet, polygon, optimism, arbitrum, bsc, gnosis];
 const { wallets } = getDefaultWallets({
   appName: 'rosewood',
   projectId: walletConnectProjectId, // Use the dynamic projectId from environment variables
-  chains,
   url: 'https://rosewoodng.com/', // origin must match your domain & subdomain
   icons: ['https://avatars.githubusercontent.com/u/37784886']
 });
@@ -37,11 +36,11 @@ const { wallets } = getDefaultWallets({
 const connectors = connectorsForWallets([
   ...wallets,
   {
-    groupName: 'Other',
+    groupName: 'Recommended',
     wallets: [
-      argentWallet({ projectId: walletConnectProjectId, chains }),
-      trustWallet({ projectId: walletConnectProjectId, chains }),
-      ledgerWallet({ projectId: walletConnectProjectId, chains }),
+      argentWallet({ projectId: walletConnectProjectId }),
+      trustWallet({ projectId: walletConnectProjectId }),
+      ledgerWallet({ projectId: walletConnectProjectId }),
     ],
   },
 ]);
