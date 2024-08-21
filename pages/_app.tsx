@@ -36,16 +36,22 @@ const walletConnectProjectId = z
   .parse(process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID);
 
 // Configure connectors
-const connectors = connectorsForWallets([
+const connectors = connectorsForWallets(
+  [
+    {
+      groupName: 'Recommended',
+      wallets: [coinbaseWallet, trustWallet, rainbowWallet, metaMaskWallet, walletConnectWallet],
+    },
+    {
+      groupName: 'More',
+      wallets: [binanceWallet, bybitWallet, okxWallet, trustWallet, uniswapWallet],
+    },
+  ],
   {
-    groupName: 'Recommended',
-    wallets: [coinbaseWallet, trustWallet, rainbowWallet, metaMaskWallet, walletConnectWallet],
-  },
-  {
-    groupName: 'More',
-    wallets: [binanceWallet, bybitWallet, okxWallet, trustWallet, uniswapWallet],
-  },
-]);
+    appName: 'Gift App Test',
+    projectId: walletConnectProjectId,
+  }
+);
 
 // Set up Wagmi Client
 const wagmiConfig = createConfig({
@@ -88,3 +94,4 @@ const App = ({ Component, pageProps }: AppProps) => {
 };
 
 export default App;
+
