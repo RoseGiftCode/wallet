@@ -23,14 +23,6 @@ const walletConnectProjectId = z
   .string()
   .parse(process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID);
 
-// Wallets configuration
-const wallets = [
-  injectedWallet({ chains }),
-  rainbowWallet({ chains }),
-  metaMaskWallet({ chains }),
-  coinbaseWallet({ chains, appName: 'My App' }),
-  walletConnectWallet({ chains }),
-];
 
 const connectors = connectorsForWallets(
   [
