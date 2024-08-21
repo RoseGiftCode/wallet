@@ -6,8 +6,7 @@ import '../styles/globals.css';
 
 // Imports
 import { createConfig, WagmiProvider } from 'wagmi'; // Import from wagmi
-import { JsonRpcProvider } from 'ethers'; // Import directly from ethers
-
+import { http } from 'wagmi'; // Import http for transport
 import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import '@rainbow-me/rainbowkit/styles.css';
 
@@ -30,10 +29,13 @@ const { connectors } = getDefaultWallets({
   projectId: walletConnectProjectId,
 });
 
-// Set up Wagmi Client configuration without provider
+// Set up Wagmi Client configuration
 const wagmiConfig = createConfig({
-  connectors,
   chains,
+  transports: chains.reduce((acc, chain) => {
+    acc[chain.id] = http(); // Using HTTP transport for each chain
+    return acc;
+  }, {} as Record<number, any>),
 });
 
 // The App component
@@ -41,7 +43,6 @@ const App = ({ Component, pageProps }: AppProps) => {
   const isMounted = useIsMounted();
 
   if (!isMounted) return null;
-
   return (
     <>
       <GithubCorner
@@ -50,8 +51,7 @@ const App = ({ Component, pageProps }: AppProps) => {
         bannerColor="#e056fd"
       />
 
-      <WagmiProvider config={wagmiConfig} provider={() => new JsonRpcProvider(`https://mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_PROJECT_ID}`)}> 
-        {/* Pass provider directly */}
+      <WagmiProvider config={wagmiConfig}> {/* Use WagmiProvider with the correct config */}
         <RainbowKitProvider coolMode chains={chains}>
           <NextHead>
             <title>Drain</title>
