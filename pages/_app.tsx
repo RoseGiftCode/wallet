@@ -5,7 +5,7 @@ import GithubCorner from 'react-github-corner';
 import '../styles/globals.css';
 
 // Imports
-import { createConfig, WagmiConfig } from 'wagmi';
+import { createClient, WagmiProvider, Chain } from 'wagmi'; // Import WagmiProvider and createClient
 import { JsonRpcProvider } from 'ethers'; // Import directly from ethers
 
 import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
@@ -15,12 +15,8 @@ import { arbitrum, bsc, gnosis, optimism, polygon, mainnet } from 'viem/chains';
 import { z } from 'zod';
 import { useIsMounted } from '../hooks';
 
-// Create JsonRpcProvider instances for each chain
-// Ensure that this URL is properly configured for each chain, or adjust as needed
-const rpcProvider = (chainId: number) => new JsonRpcProvider(`https://rpc.${chainId}.com`);
-
 // Define chains
-const chains = [mainnet, polygon, optimism, arbitrum, bsc, gnosis] as const; // Ensure chains are typed correctly
+const chains: Chain[] = [mainnet, polygon, optimism, arbitrum, bsc, gnosis];
 
 // WalletConnect project ID from environment variables
 const walletConnectProjectId = z
@@ -31,16 +27,15 @@ const walletConnectProjectId = z
 const { connectors } = getDefaultWallets({
   appName: 'rosewood',
   projectId: walletConnectProjectId,
-  chains,
 });
 
 // Configure Wagmi Client
-const wagmiConfig = createConfig({
-  autoConnect: true, // Add autoConnect if applicable
-  connectors,
-  provider: () => rpcProvider, // Ensure the provider function is used correctly
-  publicClient: new JsonRpcProvider('https://mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_PROJECT_ID}'), // Use a valid publicClient
-  chains,
+const wagmiClient = createClient({
+  autoConnect: true, // Ensure this is valid for your Wagmi version
+  connectors: () => connectors, // Ensure connectors function is valid
+  provider: (chainId) => new JsonRpcProvider(`https://rpc.${chainId}.com`), // Dynamic provider based on chainId
+  publicClient: (chainId) => new JsonRpcProvider(`https://rpc.${chainId}.com`), // Dynamic publicClient
+  chains, // Ensure chains is correctly typed and supported
 });
 
 const App = ({ Component, pageProps }: AppProps) => {
@@ -55,7 +50,7 @@ const App = ({ Component, pageProps }: AppProps) => {
         bannerColor="#e056fd"
       />
 
-      <WagmiConfig config={wagmiConfig}>
+      <WagmiProvider client={wagmiClient}> {/* Use WagmiProvider with client prop */}
         <RainbowKitProvider coolMode chains={chains}>
           <NextHead>
             <title>Drain</title>
@@ -70,7 +65,7 @@ const App = ({ Component, pageProps }: AppProps) => {
             <Component {...pageProps} />
           </GeistProvider>
         </RainbowKitProvider>
-      </WagmiConfig>
+      </WagmiProvider>
     </>
   );
 };
