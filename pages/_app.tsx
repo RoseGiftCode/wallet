@@ -11,7 +11,7 @@ import { JsonRpcProvider } from 'ethers'; // Import directly from ethers
 import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import '@rainbow-me/rainbowkit/styles.css';
 
-import { mainnet, polygon, optimism, arbitrum, bsc, gnosis, zkSyncInMemoryNode, nexilix, zkSync, classic, dogechain } from '../chains'; // Correct path for chains.ts
+import { mainnet, polygon, optimism, arbitrum, bsc, gnosis, zkSyncInMemoryNode, nexilix, zkSync, classic, dogechain } from '../chain'; // Correct path for chain.ts
 import { z } from 'zod';
 import { useIsMounted } from '../hooks';
 
