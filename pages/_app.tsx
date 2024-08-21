@@ -48,7 +48,7 @@ const connectors = connectorsForWallets(
     },
   ],
   {
-    appName: 'Gift App Test',
+    appName: 'Test App',
     projectId: walletConnectProjectId,
   }
 );
