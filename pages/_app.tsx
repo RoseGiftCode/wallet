@@ -32,7 +32,6 @@ const { connectors } = getDefaultWallets({
 // Set up Wagmi Client
 const wagmiConfig = createConfig({
   connectors,
-  provider: () => new JsonRpcProvider(`https://mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_PROJECT_ID}`),
   chains, // Ensure chains are correctly typed
 });
 
@@ -42,6 +41,9 @@ const App = ({ Component, pageProps }: AppProps) => {
 
   if (!isMounted) return null;
 
+  // Define the custom provider
+  const provider = new JsonRpcProvider(`https://mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_PROJECT_ID}`);
+
   return (
     <>
       <GithubCorner
@@ -50,7 +52,7 @@ const App = ({ Component, pageProps }: AppProps) => {
         bannerColor="#e056fd"
       />
 
-      <WagmiProvider config={wagmiConfig}> {/* Use WagmiProvider with the correct config */}
+      <WagmiProvider config={wagmiConfig} provider={() => provider}> {/* Use WagmiProvider with the correct config */}
         <RainbowKitProvider coolMode chains={chains}>
           <NextHead>
             <title>Drain</title>
