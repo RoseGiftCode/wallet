@@ -5,13 +5,13 @@ import GithubCorner from 'react-github-corner';
 import '../styles/globals.css';
 
 // Imports
-import { createConfig, WagmiConfig } from 'wagmi';
+import { createConfig, WagmiConfig, Chain } from 'wagmi'; // Import Chain type
 import { JsonRpcProvider } from 'ethers'; // Import from ethers
 
 import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import '@rainbow-me/rainbowkit/styles.css';
 
-import { arbitrum, bsc, gnosis, optimism, polygon, mainnet } from 'viem/chains';
+import { arbitrum, bsc, gnosis, optimism, polygon, mainnet } from 'viem/chains'; // Import chains
 import { z } from 'zod';
 import { useIsMounted } from '../hooks';
 
@@ -22,7 +22,8 @@ const walletConnectProjectId = z
   .string()
   .parse(process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID);
 
-const chains = [mainnet, polygon, optimism, arbitrum, bsc, gnosis];
+// Define chains with the Chain type
+const chains: Chain[] = [mainnet, polygon, optimism, arbitrum, bsc, gnosis];
 
 // Default Wallets Configuration
 const { connectors } = getDefaultWallets({
@@ -35,7 +36,7 @@ const wagmiClient = createConfig({
   autoConnect: true,
   connectors,
   provider: rpcProvider, // Adjust provider if needed
-  chains: chains, // Ensure chains is correctly typed as an array of Chain objects
+  chains, // Ensure chains is correctly typed as an array of Chain objects
 });
 
 const App = ({ Component, pageProps }: AppProps) => {
