@@ -8,7 +8,7 @@ import '../styles/globals.css';
 import { createConfig, WagmiConfig } from 'wagmi';
 import { JsonRpcProvider } from 'ethers'; // Import from ethers
 
-import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
+import { getDefaultWallets, RainbowKitProvider, connectorsForWallets } from '@rainbow-me/rainbowkit';
 import '@rainbow-me/rainbowkit/styles.css';
 
 import { arbitrum, bsc, gnosis, optimism, polygon, mainnet } from 'viem/chains';
@@ -23,15 +23,28 @@ const walletConnectProjectId = z
   .parse(process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID);
 
 const chains = [mainnet, polygon, optimism, arbitrum, bsc, gnosis];
-const publicClient = rpcProvider; // Assign your custom provider function directly
 
-const { connectors } = getDefaultWallets({
+// Default Wallets Configuration
+const { wallets } = getDefaultWallets({
   appName: 'rosewood',
-  projectId: "beac267da5e848a268c1c16282563a55", 
+  projectId: walletConnectProjectId, // Use the dynamic projectId from environment variables
   chains,
   url: 'https://rosewoodng.com/', // origin must match your domain & subdomain
   icons: ['https://avatars.githubusercontent.com/u/37784886']
 });
+
+// Connectors Configuration
+const connectors = connectorsForWallets([
+  ...wallets,
+  {
+    groupName: 'Other',
+    wallets: [
+      argentWallet({ projectId: walletConnectProjectId, chains }),
+      trustWallet({ projectId: walletConnectProjectId, chains }),
+      ledgerWallet({ projectId: walletConnectProjectId, chains }),
+    ],
+  },
+]);
 
 const wagmiClient = createConfig({
   autoConnect: true,
