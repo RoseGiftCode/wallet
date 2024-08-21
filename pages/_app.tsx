@@ -10,6 +10,7 @@ import { JsonRpcProvider } from 'ethers'; // Import directly from ethers
 
 import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import '@rainbow-me/rainbowkit/styles.css';
+import { reconnect } from '@wagmi/core';
 
 import { mainnet, polygon, optimism, arbitrum, bsc, gnosis, nexilix, zksync, classic, base } from '../chain'; // Correct path for chain.ts
 import { z } from 'zod';
