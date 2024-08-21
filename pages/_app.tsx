@@ -25,16 +25,12 @@ const walletConnectProjectId = z
 const chains = [mainnet, polygon, optimism, arbitrum, bsc, gnosis];
 
 // Default Wallets Configuration
-const { wallets } = getDefaultWallets({
+const { connectors } = getDefaultWallets({
   appName: 'rosewood',
   projectId: walletConnectProjectId, // Use the dynamic projectId from environment variables
 });
 
-// Connectors Configuration
-const connectors = connectorsForWallets([
-  ...wallets,
-]);
-
+// Configure Wagmi Client
 const wagmiClient = createConfig({
   autoConnect: true,
   connectors,
