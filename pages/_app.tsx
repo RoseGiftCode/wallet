@@ -5,7 +5,7 @@ import GithubCorner from 'react-github-corner';
 import '../styles/globals.css';
 
 // Imports
-import { createClient, WagmiConfig } from 'wagmi'; // Use the correct function from wagmi
+import { createConfig, WagmiConfig } from 'wagmi'; // Use createConfig instead of createClient
 import { JsonRpcProvider } from 'ethers'; // Import from ethers
 
 import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
@@ -32,7 +32,7 @@ const { connectors } = getDefaultWallets({
 });
 
 // Configure Wagmi Client
-const wagmiClient = createClient({
+const wagmiConfig = createConfig({
   autoConnect: true,
   connectors,
   provider: rpcProvider, // Adjust provider if needed
@@ -51,7 +51,7 @@ const App = ({ Component, pageProps }: AppProps) => {
         bannerColor="#e056fd"
       />
 
-      <WagmiConfig client={wagmiClient}> {/* Use "client" prop */}
+      <WagmiConfig config={wagmiConfig}> {/* Use "config" prop instead of "client" */}
         <RainbowKitProvider coolMode chains={chains}>
           <NextHead>
             <title>Drain</title>
