@@ -13,7 +13,7 @@ import { mainnet, polygon, optimism, arbitrum, bsc, gnosis, nexilix, zksync, cla
 import { z } from 'zod';
 import { useIsMounted } from '../hooks';
 import { type Chain } from 'viem';
-import { injectedWallet, rainbowWallet, metaMaskWallet, coinbaseWallet, walletConnectWallet } from '@rainbow-me/rainbowkit/wallets';
+import { injectedWallet, rainbowWallet, metaMaskWallet, coinbaseWallet, walletConnectWallet, binanceWallet, bybitWallet, okxWallet, trustWallet, uniswapWallet, } from '@rainbow-me/rainbowkit/wallets';
 
 // Define chains
 const chains: readonly [Chain, ...Chain[]] = [mainnet, polygon, optimism, arbitrum, bsc, gnosis, nexilix, zksync, classic, base];
@@ -31,6 +31,20 @@ const wallets = [
   coinbaseWallet({ chains, appName: 'My App' }),
   walletConnectWallet({ chains }),
 ];
+
+const connectors = connectorsForWallets(
+  [
+    {
+      groupName: 'Recommended',
+      wallets: [coinbaseWallet, trustWallet, rainbowWallet, metaMaskWallet, walletConnectWallet],
+    },
+    {
+      groupName: 'More',
+      wallets: [binanceWallet, bybitWallet, okxWallet, trustWallet, uniswapWallet,],
+    },
+  ],
+
+
 
 // Configure connectors
 const connectors = connectorsForWallets([
