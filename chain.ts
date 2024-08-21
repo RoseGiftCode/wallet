@@ -182,7 +182,6 @@ export const zksync = /*#__PURE__*/ defineChain({
   ...zksyncChainConfig,
   id: 324,
   name: 'ZKsync Era',
-  network: 'zksync-era',
   nativeCurrency: {
     decimals: 18,
     name: 'Ether',
