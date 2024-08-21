@@ -13,8 +13,19 @@ import { mainnet, polygon, optimism, arbitrum, bsc, gnosis, nexilix, zksync, cla
 import { z } from 'zod';
 import { useIsMounted } from '../hooks';
 import { type Chain } from 'viem';
-import { injectedWallet, rainbowWallet, metaMaskWallet, coinbaseWallet, walletConnectWallet, binanceWallet, bybitWallet, okxWallet, trustWallet, uniswapWallet } from '@rainbow-me/rainbowkit/wallets';
-import { QueryClient, QueryClientProvider } from 'react-query'; // Add this import
+import {
+  injectedWallet,
+  rainbowWallet,
+  metaMaskWallet,
+  coinbaseWallet,
+  walletConnectWallet,
+  binanceWallet,
+  bybitWallet,
+  okxWallet,
+  trustWallet,
+  uniswapWallet,
+} from '@rainbow-me/rainbowkit/wallets';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 // Define chains
 const chains: readonly [Chain, ...Chain[]] = [mainnet, polygon, optimism, arbitrum, bsc, gnosis, nexilix, zksync, classic, base];
@@ -36,7 +47,7 @@ const connectors = connectorsForWallets([
   },
 ]);
 
-// Set up Wagmi Client configuration
+// Set up Wagmi Client
 const wagmiConfig = createConfig({
   connectors,
   chains,
@@ -44,7 +55,6 @@ const wagmiConfig = createConfig({
 
 const queryClient = new QueryClient();
 
-// The App component
 const App = ({ Component, pageProps }: AppProps) => {
   const isMounted = useIsMounted();
 
@@ -63,10 +73,7 @@ const App = ({ Component, pageProps }: AppProps) => {
           <RainbowKitProvider chains={chains}>
             <NextHead>
               <title>Drain</title>
-              <meta
-                name="description"
-                content="Send all tokens from one wallet to another"
-              />
+              <meta name="description" content="Send all tokens from one wallet to another" />
               <link rel="icon" href="/favicon.ico" />
             </NextHead>
             <GeistProvider>
