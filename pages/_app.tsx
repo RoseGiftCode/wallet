@@ -23,7 +23,7 @@ const walletConnectProjectId = z
   .parse(process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID);
 
 // Define chains
-const chains = [mainnet, polygon, optimism, arbitrum, bsc, gnosis];
+const chains = [mainnet, polygon, optimism, arbitrum, bsc, gnosis] as const; // Ensure chains are typed correctly
 
 // Default Wallets Configuration
 const { connectors } = getDefaultWallets({
