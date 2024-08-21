@@ -14,6 +14,7 @@ import { z } from 'zod';
 import { useIsMounted } from '../hooks';
 import { type Chain } from 'viem';
 import { injectedWallet, rainbowWallet, metaMaskWallet, coinbaseWallet, walletConnectWallet, binanceWallet, bybitWallet, okxWallet, trustWallet, uniswapWallet } from '@rainbow-me/rainbowkit/wallets';
+import { QueryClient, QueryClientProvider } from 'react-query'; // Add this import
 
 // Define chains
 const chains: readonly [Chain, ...Chain[]] = [mainnet, polygon, optimism, arbitrum, bsc, gnosis, nexilix, zksync, classic, base];
