@@ -1,6 +1,6 @@
 import { type Chain } from 'viem';
 
-function defineChain(chain) {
+function defineChain(chain: Chain) {
   return {
     formatters: undefined,
     fees: undefined,
