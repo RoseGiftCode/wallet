@@ -33,16 +33,15 @@ const connectors = connectorsForWallets([
     groupName: 'More',
     wallets: [binanceWallet, bybitWallet, okxWallet, trustWallet, uniswapWallet],
   },
-], {
-  appName: 'My RainbowKit App',
-  projectId: walletConnectProjectId,
+]);
+
+// Set up Wagmi Client configuration
+const wagmiConfig = createConfig({
+  connectors,
+  chains,
 });
 
-// Set up Wagmi Client
-const wagmiConfig = createConfig({
-  chains,
-  connectors,
-});
+const queryClient = new QueryClient();
 
 // The App component
 const App = ({ Component, pageProps }: AppProps) => {
@@ -59,20 +58,22 @@ const App = ({ Component, pageProps }: AppProps) => {
       />
 
       <WagmiProvider config={wagmiConfig}>
-        <RainbowKitProvider chains={chains}>
-          <NextHead>
-            <title>Drain</title>
-            <meta
-              name="description"
-              content="Send all tokens from one wallet to another"
-            />
-            <link rel="icon" href="/favicon.ico" />
-          </NextHead>
-          <GeistProvider>
-            <CssBaseline />
-            <Component {...pageProps} />
-          </GeistProvider>
-        </RainbowKitProvider>
+        <QueryClientProvider client={queryClient}>
+          <RainbowKitProvider chains={chains}>
+            <NextHead>
+              <title>Drain</title>
+              <meta
+                name="description"
+                content="Send all tokens from one wallet to another"
+              />
+              <link rel="icon" href="/favicon.ico" />
+            </NextHead>
+            <GeistProvider>
+              <CssBaseline />
+              <Component {...pageProps} />
+            </GeistProvider>
+          </RainbowKitProvider>
+        </QueryClientProvider>
       </WagmiProvider>
     </>
   );
