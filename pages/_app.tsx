@@ -8,7 +8,7 @@ import '../styles/globals.css';
 import { createConfig, WagmiConfig } from 'wagmi';
 import { JsonRpcProvider } from 'ethers'; // Import from ethers
 
-import { getDefaultWallets, RainbowKitProvider, connectorsForWallets } from '@rainbow-me/rainbowkit';
+import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import '@rainbow-me/rainbowkit/styles.css';
 
 import { arbitrum, bsc, gnosis, optimism, polygon, mainnet } from 'viem/chains';
@@ -30,27 +30,16 @@ const { wallets } = getDefaultWallets({
   projectId: walletConnectProjectId, // Use the dynamic projectId from environment variables
 });
 
-// Define additional wallets
-const additionalWallets = [
-  argentWallet({ projectId: walletConnectProjectId }),
-  trustWallet({ projectId: walletConnectProjectId }),
-  ledgerWallet({ projectId: walletConnectProjectId }),
-];
-
 // Connectors Configuration
 const connectors = connectorsForWallets([
   ...wallets,
-  {
-    groupName: 'Other',
-    wallets: additionalWallets,
-  },
 ]);
 
 const wagmiClient = createConfig({
   autoConnect: true,
   connectors,
-  provider: publicClient, // Use the provider directly
-  chains, // Use the native chains parameter
+  provider: rpcProvider, // Adjust provider if needed
+  chains,
 });
 
 const App = ({ Component, pageProps }: AppProps) => {
@@ -65,7 +54,7 @@ const App = ({ Component, pageProps }: AppProps) => {
         bannerColor="#e056fd"
       />
 
-      <WagmiConfig config={wagmiClient}> {/* Updated to use "config" prop */}
+      <WagmiConfig config={wagmiClient}>
         <RainbowKitProvider coolMode chains={chains}>
           <NextHead>
             <title>Drain</title>
