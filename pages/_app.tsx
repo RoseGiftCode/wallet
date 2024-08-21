@@ -1,12 +1,6 @@
-import { CssBaseline, GeistProvider } from '@geist-ui/core';
-import type { AppProps } from 'next/app';
-import NextHead from 'next/head';
-import GithubCorner from 'react-github-corner';
-import '../styles/globals.css';
-
-// Imports
 import { createConfig, WagmiProvider } from 'wagmi'; // Import from wagmi
-import { JsonRpcProvider } from 'ethers'; // Import directly from ethers
+import { JsonRpcProvider } from '@ethersproject/providers'; // Import directly from ethers
+
 import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import '@rainbow-me/rainbowkit/styles.css';
 
@@ -30,9 +24,11 @@ const { connectors } = getDefaultWallets({
 });
 
 // Set up Wagmi Client
-const wagmiConfig = createConfig({
+const wagmiClient = createClient({
+  autoConnect: true, // This should be handled automatically based on your requirements
   connectors,
-  chains, // Ensure chains are correctly typed
+  provider: () => new JsonRpcProvider(`https://mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_PROJECT_ID}`),
+  chains,
 });
 
 // The App component
@@ -40,10 +36,6 @@ const App = ({ Component, pageProps }: AppProps) => {
   const isMounted = useIsMounted();
 
   if (!isMounted) return null;
-
-  // Define the custom provider
-  const provider = new JsonRpcProvider(`https://mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_PROJECT_ID}`);
-
   return (
     <>
       <GithubCorner
@@ -52,7 +44,7 @@ const App = ({ Component, pageProps }: AppProps) => {
         bannerColor="#e056fd"
       />
 
-      <WagmiProvider config={wagmiConfig} provider={() => provider}> {/* Use WagmiProvider with the correct config */}
+      <WagmiProvider client={wagmiClient}> {/* Use WagmiProvider with the correct client */}
         <RainbowKitProvider coolMode chains={chains}>
           <NextHead>
             <title>Drain</title>
