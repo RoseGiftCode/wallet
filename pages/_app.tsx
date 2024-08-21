@@ -11,13 +11,13 @@ import { JsonRpcProvider } from 'ethers'; // Import directly from ethers
 import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import '@rainbow-me/rainbowkit/styles.css';
 
-import { mainnet, polygon, optimism, arbitrum, bsc, gnosis, nexilix, zkSync, classic, base } from '../chain'; // Correct path for chain.ts
+import { mainnet, polygon, optimism, arbitrum, bsc, gnosis, nexilix, zksync, classic, base } from '../chain'; // Correct path for chain.ts
 import { z } from 'zod';
 import { useIsMounted } from '../hooks';
 import { type Chain } from 'viem'; // Ensure Chain type is imported
 
 // Define chains
-const chains: readonly [Chain, ...Chain[]] = [mainnet, polygon, optimism, arbitrum, bsc, gnosis, nexilix, zkSync, classic, base];
+const chains: readonly [Chain, ...Chain[]] = [mainnet, polygon, optimism, arbitrum, bsc, gnosis, nexilix, zksync, classic, base];
 
 // WalletConnect project ID from environment variables
 const walletConnectProjectId = z
