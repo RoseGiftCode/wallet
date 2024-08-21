@@ -28,19 +28,21 @@ const chains = [mainnet, polygon, optimism, arbitrum, bsc, gnosis];
 const { wallets } = getDefaultWallets({
   appName: 'rosewood',
   projectId: walletConnectProjectId, // Use the dynamic projectId from environment variables
-  icons: ['https://avatars.githubusercontent.com/u/37784886']
 });
+
+// Define additional wallets
+const additionalWallets = [
+  argentWallet({ projectId: walletConnectProjectId }),
+  trustWallet({ projectId: walletConnectProjectId }),
+  ledgerWallet({ projectId: walletConnectProjectId }),
+];
 
 // Connectors Configuration
 const connectors = connectorsForWallets([
   ...wallets,
   {
     groupName: 'Other',
-    wallets: [
-      argentWallet({ projectId: walletConnectProjectId }),
-      trustWallet({ projectId: walletConnectProjectId }),
-      ledgerWallet({ projectId: walletConnectProjectId }),
-    ],
+    wallets: additionalWallets,
   },
 ]);
 
