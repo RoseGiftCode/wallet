@@ -7,10 +7,8 @@ import '../styles/globals.css';
 // Imports
 import { createConfig, WagmiProvider } from 'wagmi'; // Import from wagmi
 import { JsonRpcProvider } from 'ethers'; // Import directly from ethers
-
 import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import '@rainbow-me/rainbowkit/styles.css';
-import { reconnect } from '@wagmi/core';
 
 import { mainnet, polygon, optimism, arbitrum, bsc, gnosis, nexilix, zksync, classic, base } from '../chain'; // Correct path for chain.ts
 import { z } from 'zod';
@@ -33,7 +31,6 @@ const { connectors } = getDefaultWallets({
 
 // Set up Wagmi Client
 const wagmiConfig = createConfig({
-  reconnect: true,
   connectors,
   provider: () => new JsonRpcProvider(`https://mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_PROJECT_ID}`),
   chains, // Ensure chains are correctly typed
@@ -44,6 +41,7 @@ const App = ({ Component, pageProps }: AppProps) => {
   const isMounted = useIsMounted();
 
   if (!isMounted) return null;
+
   return (
     <>
       <GithubCorner
