@@ -33,7 +33,6 @@ const { connectors } = getDefaultWallets({
 
 // Configure Wagmi Client
 const wagmiConfig = createConfig({
-  autoConnect: true,
   connectors,
   provider: rpcProvider, // Adjust provider if needed
   chains, // Ensure chains is correctly typed as an array of Chain objects
