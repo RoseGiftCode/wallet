@@ -6,18 +6,17 @@ import '../styles/globals.css';
 
 // Imports
 import { createConfig, WagmiProvider } from 'wagmi'; // Import from wagmi
-import { http, getClient, getConnectorClient } from '@wagmi/core'; // Import additional utilities
 import { JsonRpcProvider } from 'ethers'; // Import directly from ethers
 
 import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import '@rainbow-me/rainbowkit/styles.css';
 
-import { arbitrum, bsc, gnosis, optimism, polygon, mainnet } from 'viem/chains'; // Import chains
+import { arbitrum, bsc, gnosis, optimism, polygon, mainnet, zkSyncInMemoryNode, nexilix, zkSync, classic, dogechain } from '@wagmi/core/chains'; // Import chains from @wagmi/core
 import { z } from 'zod';
 import { useIsMounted } from '../hooks';
 
 // Define chains
-const chains = [mainnet, polygon, optimism, arbitrum, bsc, gnosis];
+const chains = [mainnet, polygon, optimism, arbitrum, bsc, gnosis, zkSyncInMemoryNode, nexilix, zkSync, classic, dogechain];
 
 // WalletConnect project ID from environment variables
 const walletConnectProjectId = z
@@ -35,7 +34,7 @@ const wagmiConfig = createConfig({
   autoConnect: true,
   connectors,
   provider: () => new JsonRpcProvider(`https://mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_PROJECT_ID}`),
-  chains,
+  chains, // Ensure chains are correctly typed
 });
 
 // The App component
