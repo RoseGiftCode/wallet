@@ -5,18 +5,30 @@ import GithubCorner from 'react-github-corner';
 import '../styles/globals.css';
 
 // Imports
-import { createConfig, WagmiProvider } from 'wagmi'; // Import from wagmi
-import { http } from 'wagmi'; // Import http for transport
-import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
+import { WagmiProvider, createConfig } from 'wagmi'; // Import from wagmi
+import { JsonRpcProvider } from 'ethers'; // Import directly from ethers
+import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import '@rainbow-me/rainbowkit/styles.css';
 
 import { mainnet, polygon, optimism, arbitrum, bsc, gnosis, nexilix, zksync, classic, base } from '../chain'; // Correct path for chain.ts
 import { z } from 'zod';
 import { useIsMounted } from '../hooks';
-import { type Chain } from 'viem'; // Ensure Chain type is imported
+import { type Chain } from '@rainbow-me/rainbowkit'; // Ensure Chain type is imported
 
 // Define chains
-const chains: readonly [Chain, ...Chain[]] = [mainnet, polygon, optimism, arbitrum, bsc, gnosis, nexilix, zksync, classic, base];
+const chains: readonly [Chain, ...Chain[]] = [
+  {
+    ...mainnet,
+    iconBackground: '#000',
+    iconUrl: 'https://example.com/icons/ethereum.png',
+  },
+  {
+    ...polygon,
+    iconBackground: '#f0f0f0',
+    iconUrl: 'https://example.com/icons/polygon.png',
+  },
+  // Add more chains with their specific configuration
+];
 
 // WalletConnect project ID from environment variables
 const walletConnectProjectId = z
@@ -31,11 +43,8 @@ const { connectors } = getDefaultWallets({
 
 // Set up Wagmi Client configuration
 const wagmiConfig = createConfig({
+  connectors,
   chains,
-  transports: chains.reduce((acc, chain) => {
-    acc[chain.id] = http(); // Using HTTP transport for each chain
-    return acc;
-  }, {} as Record<number, any>),
 });
 
 // The App component
@@ -43,6 +52,7 @@ const App = ({ Component, pageProps }: AppProps) => {
   const isMounted = useIsMounted();
 
   if (!isMounted) return null;
+
   return (
     <>
       <GithubCorner
@@ -50,9 +60,8 @@ const App = ({ Component, pageProps }: AppProps) => {
         size="140"
         bannerColor="#e056fd"
       />
-
-      <WagmiProvider config={wagmiConfig}> {/* Use WagmiProvider with the correct config */}
-        <RainbowKitProvider coolMode chains={chains}>
+      <WagmiProvider config={wagmiConfig}>
+        <RainbowKitProvider chains={chains}>
           <NextHead>
             <title>Drain</title>
             <meta
