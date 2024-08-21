@@ -380,5 +380,5 @@ export const chains = {
   classic,
   mainnet,
   dogechain,
-  Optimism,
+  optimism,
 }
