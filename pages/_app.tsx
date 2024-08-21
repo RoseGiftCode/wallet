@@ -35,7 +35,7 @@ const wagmiClient = createConfig({
   autoConnect: true,
   connectors,
   provider: rpcProvider, // Adjust provider if needed
-  chains,
+  chains: chains, // Ensure chains is correctly typed as an array of Chain objects
 });
 
 const App = ({ Component, pageProps }: AppProps) => {
@@ -71,4 +71,3 @@ const App = ({ Component, pageProps }: AppProps) => {
 };
 
 export default App;
-
