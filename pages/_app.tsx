@@ -1,4 +1,11 @@
-import { createConfig, WagmiProvider } from 'wagmi'; // Import from wagmi
+import { CssBaseline, GeistProvider } from '@geist-ui/core';
+import type { AppProps } from 'next/app';
+import NextHead from 'next/head';
+import GithubCorner from 'react-github-corner';
+import '../styles/globals.css';
+
+// Imports
+import { createClient, WagmiProvider } from 'wagmi'; // Import from wagmi
 import { JsonRpcProvider } from '@ethersproject/providers'; // Import directly from ethers
 
 import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
