@@ -6,7 +6,7 @@ import '../styles/globals.css';
 
 // Imports
 import { createConfig, WagmiConfig } from 'wagmi';
-import { JsonRpcProvider } from '@ethersproject/providers'; // Import from @ethersproject/providers
+import { JsonRpcProvider } from 'ethers'; // Import directly from ethers
 
 import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import '@rainbow-me/rainbowkit/styles.css';
@@ -16,7 +16,8 @@ import { z } from 'zod';
 import { useIsMounted } from '../hooks';
 
 // Create JsonRpcProvider instances for each chain
-const rpcProvider = new JsonRpcProvider(`https://mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_PROJECT_ID}`);
+// Ensure that this URL is properly configured for each chain, or adjust as needed
+const rpcProvider = (chainId: number) => new JsonRpcProvider(`https://rpc.${chainId}.com`);
 
 // Define chains
 const chains = [mainnet, polygon, optimism, arbitrum, bsc, gnosis] as const; // Ensure chains are typed correctly
@@ -35,9 +36,10 @@ const { connectors } = getDefaultWallets({
 
 // Configure Wagmi Client
 const wagmiConfig = createConfig({
+  autoConnect: true, // Add autoConnect if applicable
   connectors,
-  provider: () => rpcProvider, // Ensure the provider is correctly returned
-  publicClient: rpcProvider, // Add the publicClient property
+  provider: () => rpcProvider, // Ensure the provider function is used correctly
+  publicClient: new JsonRpcProvider('https://mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_PROJECT_ID}'), // Use a valid publicClient
   chains,
 });
 
