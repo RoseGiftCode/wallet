@@ -5,8 +5,8 @@ import GithubCorner from 'react-github-corner';
 import '../styles/globals.css';
 
 // Imports
-import { createClient, WagmiProvider } from 'wagmi'; // Import from wagmi
-import { JsonRpcProvider } from '@ethersproject/providers'; // Import directly from ethers
+import { createClient, WagmiProvider } from 'wagmi'; // Updated import
+import { JsonRpcProvider } from 'ethers'; // Import directly from ethers
 
 import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import '@rainbow-me/rainbowkit/styles.css';
@@ -32,7 +32,7 @@ const { connectors } = getDefaultWallets({
 
 // Set up Wagmi Client
 const wagmiClient = createClient({
-  autoConnect: true, // This should be handled automatically based on your requirements
+  autoConnect: true, // Ensure you are using the latest API; this is just for example
   connectors,
   provider: () => new JsonRpcProvider(`https://mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_PROJECT_ID}`),
   chains,
@@ -43,6 +43,7 @@ const App = ({ Component, pageProps }: AppProps) => {
   const isMounted = useIsMounted();
 
   if (!isMounted) return null;
+
   return (
     <>
       <GithubCorner
