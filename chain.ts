@@ -11,7 +11,7 @@ import {
   zksync,
   nexilix,
   gnosis,
-} from 'wagmi/chains';
+} from 'wagmi/core/chains';
 
 
 function defineChain(chain: Chain) {
