@@ -22,10 +22,8 @@ import {
   okxWallet,
   metaMaskWallet,
   bybitWallet,
-  walletConnectWallet,
   binanceWallet,
 } from '@rainbow-me/rainbowkit/wallets';
-
 
 // Define connectors
 const connectors = connectorsForWallets([
