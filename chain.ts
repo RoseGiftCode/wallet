@@ -318,7 +318,6 @@ export const chains: readonly [
   typeof gnosis,
   typeof classic,
   typeof mainnet,
-  typeof dogechain,
   typeof optimism
 ] = [
   avalanche,
@@ -331,6 +330,5 @@ export const chains: readonly [
   gnosis,
   classic,
   mainnet,
-  dogechain,
   optimism,
 ] as const;
