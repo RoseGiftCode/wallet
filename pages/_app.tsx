@@ -8,7 +8,7 @@ import '../styles/globals.css';
 import { createConfig, WagmiProvider, http } from 'wagmi';
 import { RainbowKitProvider, connectorsForWallets } from '@rainbow-me/rainbowkit';
 import '@rainbow-me/rainbowkit/styles.css';
-import { mainnet, polygon, optimism, arbitrum, bsc, gnosis, nexilix, zksync, classic, base } from '../chain';
+import { mainnet, polygon, optimism, arbitrum, bsc, gnosis, nexilix, zksync, classic, base, avalanche } from '../chain';
 import { z } from 'zod';
 import { useIsMounted } from '../hooks';
 import { type Chain } from 'viem';
