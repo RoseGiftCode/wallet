@@ -1,7 +1,7 @@
 import { type Chain } from 'viem';
 
 // Define a function to standardize chain definitions
-function defineChain(chain: Chain) {
+function defineChain(chain: Chain): Chain {
   return {
     formatters: undefined,
     fees: undefined,
@@ -13,7 +13,7 @@ function defineChain(chain: Chain) {
 // Chain configurations
 
 // Avalanche
-export const avalanche = defineChain({
+const avalanche = defineChain({
   id: 43114,
   name: 'Avalanche',
   nativeCurrency: {
@@ -40,7 +40,7 @@ export const avalanche = defineChain({
 });
 
 // Arbitrum
-export const arbitrum = defineChain({
+const arbitrum = defineChain({
   id: 42161,
   name: 'Arbitrum One',
   nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
@@ -63,7 +63,7 @@ export const arbitrum = defineChain({
 });
 
 // BNB Smart Chain (BSC)
-export const bsc = defineChain({
+const bsc = defineChain({
   id: 56,
   name: 'BNB Smart Chain',
   nativeCurrency: {
@@ -90,7 +90,7 @@ export const bsc = defineChain({
 });
 
 // Base
-export const base = defineChain({
+const base = defineChain({
   id: 8453,
   name: 'Base',
   nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
@@ -122,7 +122,7 @@ export const base = defineChain({
 });
 
 // Polygon
-export const polygon = defineChain({
+const polygon = defineChain({
   id: 137,
   name: 'Polygon',
   nativeCurrency: { name: 'MATIC', symbol: 'MATIC', decimals: 18 },
@@ -145,7 +145,7 @@ export const polygon = defineChain({
 });
 
 // ZKsync Era
-export const zksync = defineChain({
+const zksync = defineChain({
   id: 324,
   name: 'ZKsync Era',
   nativeCurrency: {
@@ -179,7 +179,7 @@ export const zksync = defineChain({
 });
 
 // Nexilix Smart Chain
-export const nexilix = defineChain({
+const nexilix = defineChain({
   id: 240,
   name: 'Nexilix Smart Chain',
   nativeCurrency: {
@@ -205,7 +205,7 @@ export const nexilix = defineChain({
 });
 
 // Gnosis
-export const gnosis = defineChain({
+const gnosis = defineChain({
   id: 100,
   name: 'Gnosis',
   nativeCurrency: {
@@ -235,7 +235,7 @@ export const gnosis = defineChain({
 });
 
 // Ethereum Classic
-export const classic = defineChain({
+const classic = defineChain({
   id: 61,
   name: 'Ethereum Classic',
   nativeCurrency: {
@@ -255,7 +255,7 @@ export const classic = defineChain({
 });
 
 // Ethereum Mainnet
-export const mainnet = defineChain({
+const mainnet = defineChain({
   id: 1,
   name: 'Ethereum',
   nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
@@ -280,7 +280,7 @@ export const mainnet = defineChain({
 });
 
 // Optimism
-export const optimism = defineChain({
+const optimism = defineChain({
   id: 10,
   name: 'Optimism',
   nativeCurrency: {
@@ -300,15 +300,15 @@ export const optimism = defineChain({
   },
   contracts: {
     multicall3: {
-      address: '0x5eE59dC342c0E6b4b6C7EC5Fbb7b1F87BF3C1C7e',
-      blockCreated: 7887289,
+      address: '0xca11bde05977b3631167028862be2a173976ca11',
+      blockCreated: 3413442,
     },
   },
 });
 
 // Dogechain
-export const dogechain = defineChain({
-  id: 2000,
+const dogechain = defineChain({
+  id: 568,
   name: 'Dogechain',
   nativeCurrency: {
     decimals: 18,
@@ -321,13 +321,20 @@ export const dogechain = defineChain({
   blockExplorers: {
     default: {
       name: 'Dogechain Explorer',
-      url: 'https://explorer.dogechain.dog',
+      url: 'https://dogechain.dog',
+      apiUrl: 'https://dogechain.dog/api',
+    },
+  },
+  contracts: {
+    multicall3: {
+      address: '0xca11bde05977b3631167028862be2a173976ca11',
+      blockCreated: 1638961,
     },
   },
 });
 
 // Export all chains as a tuple
-export const chains = [
+export const chains: readonly [Chain, ...Chain[]] = [
   avalanche,
   arbitrum,
   bsc,
