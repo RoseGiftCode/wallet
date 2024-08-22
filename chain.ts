@@ -1,4 +1,18 @@
 import { type Chain } from 'viem';
+import {
+  mainnet,
+  polygon,
+  optimism,
+  arbitrum,
+  base,
+  bsc,
+  classic,
+  avalanche,
+  zksync,
+  nexilix,
+  gnosis,
+} from 'wagmi/chains';
+
 
 function defineChain(chain: Chain) {
   return {
