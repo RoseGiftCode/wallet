@@ -27,7 +27,7 @@ import {
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 // Define chains
-const chains: readonly [Chain, ...Chain[]] = [mainnet, polygon, optimism, arbitrum, bsc, gnosis, nexilix, zksync, classic, base];
+const chains: readonly [Chain, ...Chain[]] = [mainnet, polygon, optimism, arbitrum, bsc, gnosis, nexilix, zksync, classic, base, avalanche];
 
 // WalletConnect project ID from environment variables
 const walletConnectProjectId = z
@@ -57,16 +57,17 @@ const wagmiConfig = createConfig({
   connectors,
   chains,
   transports: {
-    [mainnet.id]: http('https://mainnet.example.com'),
-    [polygon.id]: http('https://polygon.example.com'),
-    [optimism.id]: http('https://optimism.example.com'),
-    [arbitrum.id]: http('https://arbitrum.example.com'),
-    [bsc.id]: http('https://bsc.example.com'),
-    [gnosis.id]: http('https://gnosis.example.com'),
-    [nexilix.id]: http('https://nexilix.example.com'),
-    [zksync.id]: http('https://zksync.example.com'),
-    [classic.id]: http('https://classic.example.com'),
-    [base.id]: http('https://base.example.com'),
+    [1]: http('https://cloudflare-eth.com'),
+    [137]: http('https://polygon-rpc.com'),
+    [10]: http('https://mainnet.optimism.io'),
+    [42_161]: http('https://arb1.arbitrum.io/rpc'),
+    [56]: http('https://rpc.ankr.com/bsc'),
+    [100]: http('https://rpc.gnosischain.com'),
+    [240]: http('https://rpcurl.pos.nexilix.com'),
+    [324]: http('https://mainnet.era.zksync.io'),
+    [61]: http('https://etc.rivet.link'),
+    [8453]: http('https://mainnet.base.org'),
+    [43_114]: http('https://api.avax.network/ext/bc/C/rpc'),
   },
 });
 
