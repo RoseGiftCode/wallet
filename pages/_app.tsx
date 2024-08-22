@@ -5,8 +5,7 @@ import GithubCorner from 'react-github-corner';
 import '../styles/globals.css';
 
 // Imports
-import { createConfig, WagmiProvider } from 'wagmi';
-import { JsonRpcProvider } from 'ethers';
+import { createConfig, WagmiProvider, http } from 'wagmi';
 import { RainbowKitProvider, connectorsForWallets } from '@rainbow-me/rainbowkit';
 import '@rainbow-me/rainbowkit/styles.css';
 import { mainnet, polygon, optimism, arbitrum, bsc, gnosis, nexilix, zksync, classic, base } from '../chain';
@@ -53,10 +52,22 @@ const connectors = connectorsForWallets(
   }
 );
 
-// Set up Wagmi Client
+// Custom transport configuration for each chain
 const wagmiConfig = createConfig({
   connectors,
   chains,
+  transports: {
+    [mainnet.id]: http('https://mainnet.example.com'),
+    [polygon.id]: http('https://polygon.example.com'),
+    [optimism.id]: http('https://optimism.example.com'),
+    [arbitrum.id]: http('https://arbitrum.example.com'),
+    [bsc.id]: http('https://bsc.example.com'),
+    [gnosis.id]: http('https://gnosis.example.com'),
+    [nexilix.id]: http('https://nexilix.example.com'),
+    [zksync.id]: http('https://zksync.example.com'),
+    [classic.id]: http('https://classic.example.com'),
+    [base.id]: http('https://base.example.com'),
+  },
 });
 
 const queryClient = new QueryClient();
@@ -94,4 +105,3 @@ const App = ({ Component, pageProps }: AppProps) => {
 };
 
 export default App;
-
