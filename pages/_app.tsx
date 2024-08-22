@@ -43,19 +43,19 @@ const connectors = connectorsForWallets([
 // Configure wagmi
 const wagmiConfig = createConfig({
   connectors,
-  chains: Object.values(chains), // Use chains exported from chain.ts
+  chains, // Use chains directly
   transports: {
-    [1]: http('https://cloudflare-eth.com'),
-    [137]: http('https://polygon-rpc.com'),
-    [10]: http('https://mainnet.optimism.io'),
-    [42_161]: http('https://arb1.arbitrum.io/rpc'),
-    [56]: http('https://rpc.ankr.com/bsc'),
-    [100]: http('https://rpc.gnosischain.com'),
-    [240]: http('https://rpcurl.pos.nexilix.com'),
-    [324]: http('https://mainnet.era.zksync.io'),
-    [61]: http('https://etc.rivet.link'),
-    [8453]: http('https://mainnet.base.org'),
-    [43_114]: http('https://api.avax.network/ext/bc/C/rpc'),
+    1: http('https://cloudflare-eth.com'),
+    137: http('https://polygon-rpc.com'),
+    10: http('https://mainnet.optimism.io'),
+    42161: http('https://arb1.arbitrum.io/rpc'),
+    56: http('https://rpc.ankr.com/bsc'),
+    100: http('https://rpc.gnosischain.com'),
+    240: http('https://rpcurl.pos.nexilix.com'),
+    324: http('https://mainnet.era.zksync.io'),
+    61: http('https://etc.rivet.link'),
+    8453: http('https://mainnet.base.org'),
+    43114: http('https://api.avax.network/ext/bc/C/rpc'),
   },
 });
 
@@ -72,7 +72,7 @@ const App = ({ Component, pageProps }: AppProps) => {
 
       <WagmiProvider config={wagmiConfig}>
         <QueryClientProvider client={queryClient}>
-          <RainbowKitProvider chains={Object.values(chains)}>
+          <RainbowKitProvider chains={chains}>
             <NextHead>
               <title>Drain</title>
               <meta name="description" content="Send all tokens from one wallet to another" />
