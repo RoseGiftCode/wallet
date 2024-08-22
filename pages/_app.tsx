@@ -13,6 +13,20 @@ import { z } from 'zod';
 import { useIsMounted } from '../hooks';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
+import {
+  rainbowWallet,
+  walletConnectWallet,
+  coinbaseWallet,
+  trustWallet,
+  uniswapWallet,
+  okxWallet,
+  metaMaskWallet,
+  bybitWallet,
+  walletConnectWallet,
+  binanceWallet,
+} from '@rainbow-me/rainbowkit/wallets';
+
+
 // Define connectors
 const connectors = connectorsForWallets([
   {
