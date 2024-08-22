@@ -1,19 +1,6 @@
 import { type Chain } from 'viem';
-import {
-  mainnet,
-  polygon,
-  optimism,
-  arbitrum,
-  base,
-  bsc,
-  classic,
-  avalanche,
-  zksync,
-  nexilix,
-  gnosis,
-} from 'wagmi/core/chains';
 
-
+// Define a function to standardize chain definitions
 function defineChain(chain: Chain) {
   return {
     formatters: undefined,
@@ -23,27 +10,11 @@ function defineChain(chain: Chain) {
   };
 }
 
-const opStackChainConfig = {
-  contracts: {
-    multicall3: {
-      address: '0x...',
-      blockCreated: 0,
-    },
-  },
-};
-
-const zksyncChainConfig = {
-  contracts: {
-    multicall3: {
-      address: '0x...',
-      blockCreated: 0,
-    },
-  },
-};
+// Chain configurations
 
 // Avalanche
-export const avalanche = /*#__PURE__*/ defineChain({
-  id: 43_114,
+export const avalanche = defineChain({
+  id: 43114,
   name: 'Avalanche',
   nativeCurrency: {
     decimals: 18,
@@ -66,17 +37,15 @@ export const avalanche = /*#__PURE__*/ defineChain({
       blockCreated: 11907934,
     },
   },
-})
+});
 
 // Arbitrum
-export const arbitrum = /*#__PURE__*/ defineChain({
-  id: 42_161,
+export const arbitrum = defineChain({
+  id: 42161,
   name: 'Arbitrum One',
   nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
   rpcUrls: {
-    default: {
-      http: ['https://arb1.arbitrum.io/rpc'],
-    },
+    default: { http: ['https://arb1.arbitrum.io/rpc'] },
   },
   blockExplorers: {
     default: {
@@ -91,10 +60,10 @@ export const arbitrum = /*#__PURE__*/ defineChain({
       blockCreated: 7654707,
     },
   },
-})
+});
 
 // BNB Smart Chain (BSC)
-export const bsc = /*#__PURE__*/ defineChain({
+export const bsc = defineChain({
   id: 56,
   name: 'BNB Smart Chain',
   nativeCurrency: {
@@ -118,19 +87,15 @@ export const bsc = /*#__PURE__*/ defineChain({
       blockCreated: 15921452,
     },
   },
-})
+});
 
 // Base
-const baseSourceId = 1 // mainnet
-export const base = /*#__PURE__*/ defineChain({
-  ...opStackChainConfig,
+export const base = defineChain({
   id: 8453,
   name: 'Base',
   nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
   rpcUrls: {
-    default: {
-      http: ['https://mainnet.base.org'],
-    },
+    default: { http: ['https://mainnet.base.org'] },
   },
   blockExplorers: {
     default: {
@@ -140,41 +105,29 @@ export const base = /*#__PURE__*/ defineChain({
     },
   },
   contracts: {
-    ...opStackChainConfig.contracts,
-    l2OutputOracle: {
-      [baseSourceId]: {
-        address: '0x56315b90c40730925ec5485cf004d835058518A0',
-      },
-    },
     multicall3: {
       address: '0xca11bde05977b3631167028862be2a173976ca11',
       blockCreated: 5022,
     },
+    l2OutputOracle: {
+      address: '0x56315b90c40730925ec5485cf004d835058518A0',
+    },
     portal: {
-      [baseSourceId]: {
-        address: '0x49048044D57e1C92A77f79988d21Fa8fAF74E97e',
-        blockCreated: 17482143,
-      },
+      address: '0x49048044D57e1C92A77f79988d21Fa8fAF74E97e',
     },
     l1StandardBridge: {
-      [baseSourceId]: {
-        address: '0x3154Cf16ccdb4C6d922629664174b904d80F2C35',
-        blockCreated: 17482143,
-      },
+      address: '0x3154Cf16ccdb4C6d922629664174b904d80F2C35',
     },
   },
-  sourceId: baseSourceId,
-})
+});
 
 // Polygon
-export const polygon = /*#__PURE__*/ defineChain({
+export const polygon = defineChain({
   id: 137,
   name: 'Polygon',
   nativeCurrency: { name: 'MATIC', symbol: 'MATIC', decimals: 18 },
   rpcUrls: {
-    default: {
-      http: ['https://polygon-rpc.com'],
-    },
+    default: { http: ['https://polygon-rpc.com'] },
   },
   blockExplorers: {
     default: {
@@ -189,11 +142,10 @@ export const polygon = /*#__PURE__*/ defineChain({
       blockCreated: 25770160,
     },
   },
-})
+});
 
 // ZKsync Era
-export const zksync = /*#__PURE__*/ defineChain({
-  ...zksyncChainConfig,
+export const zksync = defineChain({
   id: 324,
   name: 'ZKsync Era',
   nativeCurrency: {
@@ -224,10 +176,10 @@ export const zksync = /*#__PURE__*/ defineChain({
       address: '0xF9cda624FBC7e059355ce98a31693d299FACd963',
     },
   },
-})
+});
 
 // Nexilix Smart Chain
-export const nexilix = /*#__PURE__*/ defineChain({
+export const nexilix = defineChain({
   id: 240,
   name: 'Nexilix Smart Chain',
   nativeCurrency: {
@@ -250,10 +202,10 @@ export const nexilix = /*#__PURE__*/ defineChain({
       blockCreated: 74448,
     },
   },
-})
+});
 
 // Gnosis
-export const gnosis = /*#__PURE__*/ defineChain({
+export const gnosis = defineChain({
   id: 100,
   name: 'Gnosis',
   nativeCurrency: {
@@ -280,10 +232,10 @@ export const gnosis = /*#__PURE__*/ defineChain({
       blockCreated: 21022491,
     },
   },
-})
+});
 
 // Ethereum Classic
-export const classic = /*#__PURE__*/ defineChain({
+export const classic = defineChain({
   id: 61,
   name: 'Ethereum Classic',
   nativeCurrency: {
@@ -300,10 +252,10 @@ export const classic = /*#__PURE__*/ defineChain({
       url: 'https://blockscout.com/etc/mainnet',
     },
   },
-})
+});
 
 // Ethereum Mainnet
-export const mainnet = /*#__PURE__*/ defineChain({
+export const mainnet = defineChain({
   id: 1,
   name: 'Ethereum',
   nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
@@ -325,10 +277,10 @@ export const mainnet = /*#__PURE__*/ defineChain({
       blockCreated: 14353601,
     },
   },
-})
+});
 
 // Optimism
-export const optimism = /*#__PURE__*/ defineChain({
+export const optimism = defineChain({
   id: 10,
   name: 'Optimism',
   nativeCurrency: {
@@ -348,40 +300,33 @@ export const optimism = /*#__PURE__*/ defineChain({
   },
   contracts: {
     multicall3: {
-      address: '0x5eC631f0bD7e5b04E28B9C8d7b3e7e60C963cc3f',
-      blockCreated: 3248837,
+      address: '0x9C5B3c28522d15D01B48937e7f1D6d1cE18f1E31',
+      blockCreated: 4749531,
     },
   },
-})
-
+});
 
 // Dogechain
-export const dogechain = /*#__PURE__*/ defineChain({
-  id: 2000,
+export const dogechain = defineChain({
+  id: 60,
   name: 'Dogechain',
   nativeCurrency: {
-    decimals: 18,
-    name: 'DOGE',
+    name: 'Dogecoin',
     symbol: 'DOGE',
+    decimals: 18,
   },
   rpcUrls: {
-    default: { http: ['https://rpc01.dogechain.dog'] },
+    default: { http: ['https://rpc.dogechain.dog'] },
   },
   blockExplorers: {
     default: {
-      name: 'Dogechain Explorer',
+      name: 'DogeChain Explorer',
       url: 'https://explorer.dogechain.dog',
     },
   },
-  contracts: {
-    multicall3: {
-      address: '0xca11bde05977b3631167028862be2a173976ca11',
-      blockCreated: 344484,
-    },
-  },
-})
+});
 
-// Export chains
+// Export all chains together
 export const chains = {
   avalanche,
   arbitrum,
@@ -395,4 +340,4 @@ export const chains = {
   mainnet,
   dogechain,
   optimism,
-}
+};
