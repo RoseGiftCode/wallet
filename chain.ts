@@ -301,40 +301,26 @@ const optimism = defineChain({
   contracts: {
     multicall3: {
       address: '0xca11bde05977b3631167028862be2a173976ca11',
-      blockCreated: 3413442,
+      blockCreated: 21542477,
     },
   },
 });
 
-// Dogechain
-const dogechain = defineChain({
-  id: 568,
-  name: 'Dogechain',
-  nativeCurrency: {
-    decimals: 18,
-    name: 'Dogecoin',
-    symbol: 'DOGE',
-  },
-  rpcUrls: {
-    default: { http: ['https://rpc.dogechain.dog'] },
-  },
-  blockExplorers: {
-    default: {
-      name: 'Dogechain Explorer',
-      url: 'https://dogechain.dog',
-      apiUrl: 'https://dogechain.dog/api',
-    },
-  },
-  contracts: {
-    multicall3: {
-      address: '0xca11bde05977b3631167028862be2a173976ca11',
-      blockCreated: 1638961,
-    },
-  },
-});
-
-// Export all chains as a tuple
-export const chains: readonly [Chain, ...Chain[]] = [
+// Define the tuple of all chains
+export const chains: readonly [
+  typeof avalanche,
+  typeof arbitrum,
+  typeof bsc,
+  typeof base,
+  typeof polygon,
+  typeof zksync,
+  typeof nexilix,
+  typeof gnosis,
+  typeof classic,
+  typeof mainnet,
+  typeof dogechain,
+  typeof optimism
+] = [
   avalanche,
   arbitrum,
   bsc,
