@@ -8,54 +8,30 @@ import '../styles/globals.css';
 import { createConfig, WagmiProvider, http } from 'wagmi';
 import { RainbowKitProvider, connectorsForWallets } from '@rainbow-me/rainbowkit';
 import '@rainbow-me/rainbowkit/styles.css';
-import { mainnet, polygon, optimism, arbitrum, bsc, gnosis, nexilix, zksync, classic, base, avalanche } from '../chain';
+import { chains } from '../chain'; // Importing from your custom chains file
 import { z } from 'zod';
 import { useIsMounted } from '../hooks';
-import { type Chain } from 'viem';
-import {
-  injectedWallet,
-  rainbowWallet,
-  metaMaskWallet,
-  coinbaseWallet,
-  walletConnectWallet,
-  binanceWallet,
-  bybitWallet,
-  okxWallet,
-  trustWallet,
-  uniswapWallet,
-} from '@rainbow-me/rainbowkit/wallets';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
-// Define chains
-const chains: readonly [Chain, ...Chain[]] = [mainnet, polygon, optimism, arbitrum, bsc, gnosis, nexilix, zksync, classic, base, avalanche];
-
-// WalletConnect project ID from environment variables
-const walletConnectProjectId = z
-  .string()
-  .parse(process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID);
-
-// Configure connectors
-const connectors = connectorsForWallets(
-  [
-    {
-      groupName: 'Recommended',
-      wallets: [coinbaseWallet, trustWallet, rainbowWallet, metaMaskWallet, walletConnectWallet],
-    },
-    {
-      groupName: 'More',
-      wallets: [binanceWallet, bybitWallet, okxWallet, trustWallet, uniswapWallet],
-    },
-  ],
+// Define connectors
+const connectors = connectorsForWallets([
   {
-    appName: 'Test App',
-    projectId: walletConnectProjectId,
-  }
-);
+    groupName: 'Recommended',
+    wallets: [coinbaseWallet, trustWallet, rainbowWallet, metaMaskWallet, walletConnectWallet],
+  },
+  {
+    groupName: 'More',
+    wallets: [binanceWallet, bybitWallet, okxWallet, trustWallet, uniswapWallet],
+  },
+], {
+  appName: 'Test App',
+  projectId: z.string().parse(process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID),
+});
 
-// Custom transport configuration for each chain
+// Configure wagmi
 const wagmiConfig = createConfig({
   connectors,
-  chains,
+  chains: Object.values(chains), // Use chains exported from chain.ts
   transports: {
     [1]: http('https://cloudflare-eth.com'),
     [137]: http('https://polygon-rpc.com'),
@@ -80,15 +56,11 @@ const App = ({ Component, pageProps }: AppProps) => {
 
   return (
     <>
-      <GithubCorner
-        href="https://github.com/dawsbot/drain"
-        size="140"
-        bannerColor="#e056fd"
-      />
+      <GithubCorner href="https://github.com/dawsbot/drain" size="140" bannerColor="#e056fd" />
 
       <WagmiProvider config={wagmiConfig}>
         <QueryClientProvider client={queryClient}>
-          <RainbowKitProvider chains={chains}>
+          <RainbowKitProvider chains={Object.values(chains)}>
             <NextHead>
               <title>Drain</title>
               <meta name="description" content="Send all tokens from one wallet to another" />
