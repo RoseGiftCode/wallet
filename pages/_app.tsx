@@ -72,7 +72,7 @@ const App = ({ Component, pageProps }: AppProps) => {
 
       <WagmiProvider config={wagmiConfig}>
         <QueryClientProvider client={queryClient}>
-          <RainbowKitProvider chains={chains}>
+          <RainbowKitProvider {chains}>
             <NextHead>
               <title>Drain</title>
               <meta name="description" content="Send all tokens from one wallet to another" />
