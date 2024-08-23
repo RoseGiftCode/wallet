@@ -70,8 +70,8 @@ const wagmiConfig = createConfig({
 const queryClient = new QueryClient();
 
 const App = ({ Component, pageProps }: AppProps) => {
-  // Update the type to be an instance of Web3Wallet or null
-  const [web3wallet, setWeb3Wallet] = useState<Web3Wallet | null>(null);
+  // Update the type to use `typeof Web3Wallet` or null
+  const [web3wallet, setWeb3Wallet] = useState<InstanceType<typeof Web3Wallet> | null>(null);
   const isMounted = useIsMounted();
 
   useEffect(() => {
