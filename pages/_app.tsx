@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { CssBaseline, GeistProvider } from '@geist-ui/core';
 import type { AppProps } from 'next/app';
 import NextHead from 'next/head';
@@ -13,6 +14,11 @@ import { z } from 'zod';
 import { useIsMounted } from '../hooks';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
+// Import WalletConnect packages
+import { Core } from '@walletconnect/core';
+import { Web3Wallet } from '@walletconnect/web3wallet';
+
+// Import wallet configurations
 import {
   rainbowWallet,
   walletConnectWallet,
@@ -25,18 +31,9 @@ import {
   binanceWallet,
 } from '@rainbow-me/rainbowkit/wallets';
 
-projectId: z.string().parse(process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || 'default_value_if_not_set'),
-console.log('WalletConnect Project ID:', process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID);
+// Define WalletConnect projectId
+const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || 'default_project_id_placeholder';
 
-const projectId = z.string().parse(process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID);
-
-if (!projectId) {
-    console.error('WalletConnect Project ID is missing!');
-}
-
-
-
-// Define connectors
 const connectors = connectorsForWallets([
   {
     groupName: 'Recommended',
@@ -48,13 +45,13 @@ const connectors = connectorsForWallets([
   },
 ], {
   appName: 'Test App',
-  projectId: z.string().parse(process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID),
+  projectId: projectId,
 });
 
 // Configure wagmi
 const wagmiConfig = createConfig({
   connectors,
-  chains, // Use chains directly
+  chains,
   transports: {
     1: http('https://cloudflare-eth.com'),
     137: http('https://polygon-rpc.com'),
@@ -73,9 +70,41 @@ const wagmiConfig = createConfig({
 const queryClient = new QueryClient();
 
 const App = ({ Component, pageProps }: AppProps) => {
+  const [web3wallet, setWeb3Wallet] = useState<Web3Wallet | null>(null);
   const isMounted = useIsMounted();
 
-  if (!isMounted) return null;
+  useEffect(() => {
+    const initializeWalletConnect = async () => {
+      try {
+        const core = new Core({
+          projectId: projectId
+        });
+
+        const metadata = {
+          name: 'Test App',
+          description: 'AppKit Example',
+          url: 'https://web3modal.com', // origin must match your domain & subdomain
+          icons: ['https://avatars.githubusercontent.com/u/37784886']
+        };
+
+        const wallet = await Web3Wallet.init({
+          core,
+          metadata
+        });
+
+        setWeb3Wallet(wallet);
+        console.log('WalletConnect initialized successfully');
+      } catch (error) {
+        console.error('Error initializing WalletConnect:', error);
+      }
+    };
+
+    if (isMounted) {
+      initializeWalletConnect();
+    }
+  }, [isMounted]);
+
+  if (!isMounted || !web3wallet) return null;
 
   return (
     <>
