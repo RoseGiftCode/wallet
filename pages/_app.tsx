@@ -111,8 +111,8 @@ const App = ({ Component, pageProps }: AppProps) => {
     <>
       <GithubCorner href="https://github.com/dawsbot/drain" size="140" bannerColor="#e056fd" />
 
-      <WagmiProvider config={wagmiConfig}>
-        <QueryClientProvider client={queryClient}>
+      <QueryClientProvider client={queryClient}>
+        <WagmiProvider config={wagmiConfig}>
           <RainbowKitProvider>
             <NextHead>
               <title>Drain</title>
@@ -124,8 +124,8 @@ const App = ({ Component, pageProps }: AppProps) => {
               <Component {...pageProps} />
             </GeistProvider>
           </RainbowKitProvider>
-        </QueryClientProvider>
-      </WagmiProvider>
+        </WagmiProvider>
+      </QueryClientProvider>
     </>
   );
 };
