@@ -6,6 +6,3 @@ NEXT_PUBLIC_ALCHEMY_MAINNET_URL=https://eth-mainnet.g.alchemy.com/v2/iUoZdhhu265
 NEXT_PUBLIC_ALCHEMY_ARBITRUM_URL=https://arb-mainnet.g.alchemy.com/v2/iUoZdhhu265uyKgw-V6FojhyO80OKfmV
 NEXT_PUBLIC_ALCHEMY_OPTIMISM_URL=https://opt-mainnet.g.alchemy.com/v2/iUoZdhhu265uyKgw-V6FojhyO80OKfmV
 NEXT_PUBLIC_ALCHEMY_ZKSYNC_URL=https://zksync-mainnet.g.alchemy.com/v2/iUoZdhhu265uyKgw-V6FojhyO80OKfmV
-
-
-
