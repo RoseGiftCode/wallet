@@ -69,8 +69,14 @@ const wagmiConfig = createConfig({
 
 const queryClient = new QueryClient();
 
+// Define Wallet type
+interface Wallet {
+  isRecommended: boolean;
+  // Add other properties if needed
+}
+
 // Updated function to handle undefined or null data
-function getRecomendedWallets(walletsData: any) {
+function getRecommendedWallets(walletsData: Record<string, Wallet> | null) {
   // Check if walletsData is null or undefined
   if (!walletsData || typeof walletsData !== 'object') {
     console.error('walletsData is null or undefined');
