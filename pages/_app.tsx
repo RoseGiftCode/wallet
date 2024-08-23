@@ -11,7 +11,7 @@ import { RainbowKitProvider, connectorsForWallets } from '@rainbow-me/rainbowkit
 import '@rainbow-me/rainbowkit/styles.css';
 import { chains } from '../chain'; // Importing from your custom chains file
 import { useIsMounted } from '../hooks';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 // Import WalletConnect packages
 import { Core } from '@walletconnect/core';
@@ -69,31 +69,6 @@ const wagmiConfig = createConfig({
 
 const queryClient = new QueryClient();
 
-// Define Wallet type
-interface Wallet {
-  isRecommended: boolean;
-  // Add other properties if needed
-}
-
-// Updated function to handle undefined or null data
-function getRecommendedWallets(walletsData: Record<string, Wallet> | null) {
-  if (!walletsData || typeof walletsData !== 'object') {
-    console.error('walletsData is null or undefined');
-    return [];
-  }
-
-  try {
-    const recommendedWallets = Object.values(walletsData).filter(wallet => {
-      return wallet && wallet.isRecommended;
-    });
-
-    return recommendedWallets;
-  } catch (error) {
-    console.error('Error processing walletsData:', error);
-    return [];
-  }
-}
-
 const App = ({ Component, pageProps }: AppProps) => {
   const [web3wallet, setWeb3Wallet] = useState<InstanceType<typeof Web3Wallet> | null>(null);
   const isMounted = useIsMounted();
@@ -129,7 +104,7 @@ const App = ({ Component, pageProps }: AppProps) => {
     }
   }, [isMounted]);
 
-  // Render the providers regardless of wallet initialization
+  // Always render the providers and wrap the entire application
   return (
     <QueryClientProvider client={queryClient}>
       <WagmiProvider config={wagmiConfig}>
@@ -142,7 +117,7 @@ const App = ({ Component, pageProps }: AppProps) => {
           <GeistProvider>
             <CssBaseline />
             <GithubCorner href="https://github.com/dawsbot/drain" size="140" bannerColor="#e056fd" />
-            {/* Conditionally render the main component only after initialization */}
+            {/* Conditionally render the main component based on wallet initialization */}
             {isMounted && web3wallet ? <Component {...pageProps} /> : null}
           </GeistProvider>
         </RainbowKitProvider>
