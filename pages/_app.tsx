@@ -34,6 +34,7 @@ import {
 // Define WalletConnect projectId
 const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || 'default_project_id_placeholder';
 
+// Define connectors
 const connectors = connectorsForWallets([
   {
     groupName: 'Recommended',
@@ -70,7 +71,8 @@ const wagmiConfig = createConfig({
 const queryClient = new QueryClient();
 
 const App = ({ Component, pageProps }: AppProps) => {
-  const [web3wallet, setWeb3Wallet] = useState<typeof Web3Wallet | null>(null);
+  // Define the type for web3wallet instance
+  const [web3wallet, setWeb3Wallet] = useState<InstanceType<typeof Web3Wallet> | null>(null);
   const isMounted = useIsMounted();
 
   useEffect(() => {
