@@ -33,6 +33,7 @@ import {
 // Define WalletConnect projectId
 const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || 'default_project_id_placeholder';
 
+// Define connectors
 const connectors = connectorsForWallets([
   {
     groupName: 'Recommended',
@@ -69,7 +70,7 @@ const wagmiConfig = createConfig({
 const queryClient = new QueryClient();
 
 const App = ({ Component, pageProps }: AppProps) => {
-  const [web3wallet, setWeb3Wallet] = useState<typeof Web3Wallet | null>(null);
+  const [web3wallet, setWeb3Wallet] = useState<Web3Wallet | null>(null);
   const isMounted = useIsMounted();
 
   useEffect(() => {
@@ -82,7 +83,7 @@ const App = ({ Component, pageProps }: AppProps) => {
         const metadata = {
           name: 'Test App',
           description: 'AppKit Example',
-          url: 'https://web3modal.com',
+          url: 'https://web3modal.com', // origin must match your domain & subdomain
           icons: ['https://avatars.githubusercontent.com/u/37784886']
         };
 
@@ -91,7 +92,7 @@ const App = ({ Component, pageProps }: AppProps) => {
           metadata
         });
 
-        setWeb3Wallet(wallet);
+        setWeb3Wallet(wallet); // This line should now work correctly
         console.log('WalletConnect initialized successfully');
       } catch (error) {
         console.error('Error initializing WalletConnect:', error);
@@ -103,7 +104,7 @@ const App = ({ Component, pageProps }: AppProps) => {
     }
   }, [isMounted]);
 
-  if (!isMounted || !web3wallet) return <div>Loading...</div>;
+  if (!isMounted || !web3wallet) return null;
 
   return (
     <>
