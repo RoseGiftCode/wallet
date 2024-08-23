@@ -25,6 +25,9 @@ import {
   binanceWallet,
 } from '@rainbow-me/rainbowkit/wallets';
 
+console.log('WalletConnect Project ID:', process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID);
+
+
 // Define connectors
 const connectors = connectorsForWallets([
   {
