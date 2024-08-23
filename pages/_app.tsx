@@ -37,7 +37,7 @@ const connectors = connectorsForWallets([
   },
 ], {
   appName: 'Test App',
-  projectId: z.string().parse(process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID),
+  projectId: z.string().parse(process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID),
 });
 
 // Configure wagmi
