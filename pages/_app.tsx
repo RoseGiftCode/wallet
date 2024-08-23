@@ -70,7 +70,7 @@ const wagmiConfig = createConfig({
 const queryClient = new QueryClient();
 
 const App = ({ Component, pageProps }: AppProps) => {
-  const [web3wallet, setWeb3Wallet] = useState<ReturnType<typeof Web3Wallet.init> | null>(null);
+  const [web3wallet, setWeb3Wallet] = useState<Web3Wallet | null>(null); // Update the state type here
   const isMounted = useIsMounted();
 
   useEffect(() => {
@@ -92,7 +92,7 @@ const App = ({ Component, pageProps }: AppProps) => {
           metadata
         });
 
-        setWeb3Wallet(wallet);
+        setWeb3Wallet(wallet); // Now this should work correctly
         console.log('WalletConnect initialized successfully');
       } catch (error) {
         console.error('Error initializing WalletConnect:', error);
@@ -108,25 +108,4 @@ const App = ({ Component, pageProps }: AppProps) => {
 
   return (
     <>
-      <GithubCorner href="https://github.com/dawsbot/drain" size="140" bannerColor="#e056fd" />
-
-      <WagmiProvider config={wagmiConfig}>
-        <QueryClientProvider client={queryClient}>
-          <RainbowKitProvider>
-            <NextHead>
-              <title>Drain</title>
-              <meta name="description" content="Send all tokens from one wallet to another" />
-              <link rel="icon" href="/favicon.ico" />
-            </NextHead>
-            <GeistProvider>
-              <CssBaseline />
-              <Component {...pageProps} />
-            </GeistProvider>
-          </RainbowKitProvider>
-        </QueryClientProvider>
-      </WagmiProvider>
-    </>
-  );
-};
-
-export default App;
+      <GithubCorner href="https://github.com/dawsbot/drain" size="140" bannerCo
