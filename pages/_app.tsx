@@ -25,7 +25,15 @@ import {
   binanceWallet,
 } from '@rainbow-me/rainbowkit/wallets';
 
+projectId: z.string().parse(process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || 'default_value_if_not_set'),
 console.log('WalletConnect Project ID:', process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID);
+
+const projectId = z.string().parse(process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID);
+
+if (!projectId) {
+    console.error('WalletConnect Project ID is missing!');
+}
+
 
 
 // Define connectors
