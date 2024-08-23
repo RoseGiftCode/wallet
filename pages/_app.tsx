@@ -77,28 +77,24 @@ interface Wallet {
 
 // Updated function to handle undefined or null data
 function getRecommendedWallets(walletsData: Record<string, Wallet> | null) {
-  // Check if walletsData is null or undefined
   if (!walletsData || typeof walletsData !== 'object') {
     console.error('walletsData is null or undefined');
-    return []; // Return an empty array or handle the error as needed
+    return [];
   }
 
-  // Assuming walletsData is an object, but you want to safeguard against issues
   try {
     const recommendedWallets = Object.values(walletsData).filter(wallet => {
-      // Additional checks can be added here if wallet might also be null/undefined
       return wallet && wallet.isRecommended;
     });
 
     return recommendedWallets;
   } catch (error) {
     console.error('Error processing walletsData:', error);
-    return []; // Return an empty array or handle the error as needed
+    return [];
   }
 }
 
 const App = ({ Component, pageProps }: AppProps) => {
-  // Update the type to use `typeof Web3Wallet` or null
   const [web3wallet, setWeb3Wallet] = useState<InstanceType<typeof Web3Wallet> | null>(null);
   const isMounted = useIsMounted();
 
@@ -112,7 +108,7 @@ const App = ({ Component, pageProps }: AppProps) => {
         const metadata = {
           name: 'Test App',
           description: 'AppKit Example',
-          url: 'https://web3modal.com', // origin must match your domain & subdomain
+          url: 'https://web3modal.com',
           icons: ['https://avatars.githubusercontent.com/u/37784886']
         };
 
@@ -121,7 +117,7 @@ const App = ({ Component, pageProps }: AppProps) => {
           metadata
         });
 
-        setWeb3Wallet(wallet); // This line will now work correctly
+        setWeb3Wallet(wallet);
         console.log('WalletConnect initialized successfully');
       } catch (error) {
         console.error('Error initializing WalletConnect:', error);
@@ -133,28 +129,25 @@ const App = ({ Component, pageProps }: AppProps) => {
     }
   }, [isMounted]);
 
-  if (!isMounted || !web3wallet) return null;
-
+  // Render the providers regardless of wallet initialization
   return (
-    <>
-      <GithubCorner href="https://github.com/dawsbot/drain" size="140" bannerColor="#e056fd" />
-
-      <QueryClientProvider client={queryClient}>
-        <WagmiProvider config={wagmiConfig}>
-          <RainbowKitProvider>
-            <NextHead>
-              <title>Drain</title>
-              <meta name="description" content="Send all tokens from one wallet to another" />
-              <link rel="icon" href="/favicon.ico" />
-            </NextHead>
-            <GeistProvider>
-              <CssBaseline />
-              <Component {...pageProps} />
-            </GeistProvider>
-          </RainbowKitProvider>
-        </WagmiProvider>
-      </QueryClientProvider>
-    </>
+    <QueryClientProvider client={queryClient}>
+      <WagmiProvider config={wagmiConfig}>
+        <RainbowKitProvider>
+          <NextHead>
+            <title>Drain</title>
+            <meta name="description" content="Send all tokens from one wallet to another" />
+            <link rel="icon" href="/favicon.ico" />
+          </NextHead>
+          <GeistProvider>
+            <CssBaseline />
+            <GithubCorner href="https://github.com/dawsbot/drain" size="140" bannerColor="#e056fd" />
+            {/* Conditionally render the main component only after initialization */}
+            {isMounted && web3wallet ? <Component {...pageProps} /> : null}
+          </GeistProvider>
+        </RainbowKitProvider>
+      </WagmiProvider>
+    </QueryClientProvider>
   );
 };
 
