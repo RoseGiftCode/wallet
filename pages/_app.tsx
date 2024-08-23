@@ -70,7 +70,7 @@ const wagmiConfig = createConfig({
 const queryClient = new QueryClient();
 
 const App = ({ Component, pageProps }: AppProps) => {
-  const [web3wallet, setWeb3Wallet] = useState<Web3Wallet | null>(null);
+  const [web3wallet, setWeb3Wallet] = useState<ReturnType<typeof Web3Wallet.init> | null>(null);
   const isMounted = useIsMounted();
 
   useEffect(() => {
@@ -92,7 +92,7 @@ const App = ({ Component, pageProps }: AppProps) => {
           metadata
         });
 
-        setWeb3Wallet(wallet); // This line should now work correctly
+        setWeb3Wallet(wallet);
         console.log('WalletConnect initialized successfully');
       } catch (error) {
         console.error('Error initializing WalletConnect:', error);
