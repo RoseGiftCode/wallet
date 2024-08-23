@@ -70,7 +70,8 @@ const wagmiConfig = createConfig({
 const queryClient = new QueryClient();
 
 const App = ({ Component, pageProps }: AppProps) => {
-  const [web3wallet, setWeb3Wallet] = useState<Web3Wallet | null>(null); // Check TypeScript syntax here
+  // Use typeof Web3Wallet to define the correct type
+  const [web3wallet, setWeb3Wallet] = useState<typeof Web3Wallet | null>(null);
   const isMounted = useIsMounted();
 
   useEffect(() => {
@@ -92,7 +93,7 @@ const App = ({ Component, pageProps }: AppProps) => {
           metadata
         });
 
-        setWeb3Wallet(wallet); // Check JSX and TypeScript syntax here
+        setWeb3Wallet(wallet); // Now this line will work correctly
         console.log('WalletConnect initialized successfully');
       } catch (error) {
         console.error('Error initializing WalletConnect:', error);
@@ -104,7 +105,7 @@ const App = ({ Component, pageProps }: AppProps) => {
     }
   }, [isMounted]);
 
-  if (!isMounted || !web3wallet) return null; // Ensure proper JSX syntax
+  if (!isMounted || !web3wallet) return null;
 
   return (
     <>
@@ -120,7 +121,7 @@ const App = ({ Component, pageProps }: AppProps) => {
             </NextHead>
             <GeistProvider>
               <CssBaseline />
-              <Component {...pageProps} /> {/* Check for correctly closed tags */}
+              <Component {...pageProps} />
             </GeistProvider>
           </RainbowKitProvider>
         </QueryClientProvider>
