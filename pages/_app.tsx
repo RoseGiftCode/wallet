@@ -69,6 +69,28 @@ const wagmiConfig = createConfig({
 
 const queryClient = new QueryClient();
 
+// Updated function to handle undefined or null data
+function getRecomendedWallets(walletsData: any) {
+  // Check if walletsData is null or undefined
+  if (!walletsData || typeof walletsData !== 'object') {
+    console.error('walletsData is null or undefined');
+    return []; // Return an empty array or handle the error as needed
+  }
+
+  // Assuming walletsData is an object, but you want to safeguard against issues
+  try {
+    const recommendedWallets = Object.values(walletsData).filter(wallet => {
+      // Additional checks can be added here if wallet might also be null/undefined
+      return wallet && wallet.isRecommended;
+    });
+
+    return recommendedWallets;
+  } catch (error) {
+    console.error('Error processing walletsData:', error);
+    return []; // Return an empty array or handle the error as needed
+  }
+}
+
 const App = ({ Component, pageProps }: AppProps) => {
   // Update the type to use `typeof Web3Wallet` or null
   const [web3wallet, setWeb3Wallet] = useState<InstanceType<typeof Web3Wallet> | null>(null);
