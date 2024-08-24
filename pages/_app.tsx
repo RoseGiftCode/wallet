@@ -31,7 +31,7 @@ import {
 } from '@rainbow-me/rainbowkit/wallets';
 
 // Define WalletConnect projectId
-const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || 'default_project_id_placeholder';
+const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || 'b5013ca558d8036ffda5357261e58d72';
 
 // Define connectors
 const connectors = connectorsForWallets([
