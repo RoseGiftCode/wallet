@@ -37,7 +37,7 @@ const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || 'dce4c19a5
 const connectors = connectorsForWallets([
   {
     groupName: 'Recommended',
-    wallets: [coinbaseWallet, trustWallet, rainbowWallet, metaMaskWallet, walletConnectWallet],
+    wallets: [coinbaseWallet, rainbowWallet, metaMaskWallet, walletConnectWallet],
   },
   {
     groupName: 'More',
